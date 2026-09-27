@@ -2,7 +2,7 @@
 
 **Scan the ingredient labels of the skincare you already own. ShelfSense tells you what clashes, what you're doubling up on and what your routine is missing — then builds a morning and evening routine using only the products on your shelf.**
 
-![CI](https://github.com/<your-github-username>/shelfsense/actions/workflows/ci.yml/badge.svg)
+![CI](https://github.com/Sangupta03/Shelfsense/actions/workflows/ci.yml/badge.svg)
 
 **Live:** _add your Vercel URL here_ · **Demo:** press **Demo** / **Try the demo** anywhere on the site (read-only sample shelf, no sign-up)
 
@@ -205,6 +205,11 @@ npm test                          # Vitest + Supertest (needs the test database)
 npm run build                     # production build of client + server
 cd parser && ruff check . && pytest
 ```
+
+**Real label photos (optional, costs a few cents):** the tests use tiny generated images and a fake Gemini, so they never need real photos.
+To check real labels against the real model, put a few clear photos of ingredient lists in `parser/tests/fixtures/real/`
+(git-ignored, so they're never pushed; no photos with faces or hands), set `GEMINI_API_KEY`, and run
+`python scripts/try_vision.py tests/fixtures/real` from `parser/`.
 
 > **Windows:** stop `npm run dev` before `npm run build`, or Windows may refuse to overwrite a file the running server has open.
 

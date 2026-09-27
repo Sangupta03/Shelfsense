@@ -1,0 +1,10 @@
+# Ruff (linter) settings. Dependencies live in requirements.txt.
+# (Not in pyproject.toml on purpose: Vercel treats a pyproject.toml as the
+# dependency list and would ignore requirements.txt.)
+
+line-length = 110
+target-version = "py312"
+
+[lint]
+# E/F = the basics, I = sorted imports, B = common bugs, UP = modern syntax
+select = ["E", "F", "I", "B", "UP"]
