@@ -1,6 +1,6 @@
 import { Router, type Response } from "express";
 import bcrypt from "bcryptjs";
-import { Prisma } from "@prisma/client";
+import { Prisma } from "../generated/prisma/client.js";
 import type { MeResponse } from "@shelfsense/shared";
 import { prisma } from "../lib/db.js";
 import { HttpError } from "../lib/httpError.js";

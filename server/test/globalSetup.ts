@@ -1,5 +1,6 @@
 import { existsSync } from "node:fs";
-import { createPrismaClient } from "../src/lib/db.js";
+import { PrismaPg } from "@prisma/adapter-pg";
+import { PrismaClient } from "../src/generated/prisma/client.js";
 
 const HOW_TO_FIX = `
 The test database isn't ready. From the server/ folder run (once):
@@ -15,7 +16,9 @@ The test database isn't ready. From the server/ folder run (once):
 export default async function checkTestDatabase(): Promise<void> {
   if (existsSync(".env.test")) process.loadEnvFile(".env.test");
 
-  const prisma = createPrismaClient();
+  // Built here, AFTER .env.test is loaded. (Importing src/lib/db.ts would create its
+  // client at import time, before this function runs.)
+  const prisma = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL }) });
   try {
     const count = await prisma.ingredient.count();
     if (count === 0) throw new Error("no ingredients found");

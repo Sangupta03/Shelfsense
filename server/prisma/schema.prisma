@@ -4,12 +4,16 @@
 // column (@map). Prisma doesn't care, but the analysis queries are hand-written SQL,
 // and `products.user_id` reads a lot nicer than `"Product"."userId"` with quotes everywhere.
 
-// engineType "client" = no separate native query engine file. Prisma talks to
-// Postgres through the plain `pg` driver instead (see src/lib/db.ts). Serverless
-// hosts like Vercel like this much better: smaller bundle, nothing to lose in bundling.
+// The newer "prisma-client" generator writes the client as TypeScript into
+// src/generated/prisma (git-ignored, recreated by `prisma generate` on install).
+// engineType "client" = no native query engine: Prisma talks to Postgres through the
+// plain `pg` driver (see src/lib/db.ts), and its small query compiler is imported as
+// ordinary JavaScript - so Vercel's bundler can't leave it behind.
 generator client {
-  provider   = "prisma-client-js"
-  engineType = "client"
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  engineType   = "client"
+  moduleFormat = "esm"
 }
 
 datasource db {

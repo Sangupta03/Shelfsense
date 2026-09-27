@@ -1,5 +1,5 @@
 import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "../generated/prisma/client.js";
 
 // Prisma sends its queries through the normal `pg` driver (the "adapter"),
 // because the schema uses engineType = "client" - no native engine binary.

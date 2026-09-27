@@ -117,6 +117,7 @@ shelfsense/
 │   ├── src/middleware/       requireAuth (+ blockDemo), errorHandler, rateLimit
 │   ├── src/lib/              db, env, httpError, llm (Gemini), parserClient  ← infrastructure
 │   ├── src/types/            express.d.ts (adds req.user)
+│   ├── src/generated/        Prisma client (generated on install, git-ignored)
 │   └── test/                 auth, analysis, coach, llm tests
 ├── shared/                   types shared by client and server
 ├── parser/                   Python FastAPI label parser

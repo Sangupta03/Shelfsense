@@ -1,4 +1,4 @@
-import type { User } from "@prisma/client";
+import type { User } from "../generated/prisma/client.js";
 import type { PublicUser } from "@shelfsense/shared";
 
 // The only way a user leaves the server. Picking fields one by one (instead of
