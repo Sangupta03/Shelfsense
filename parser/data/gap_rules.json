@@ -1,0 +1,23 @@
+[
+  {
+    "slot": "AM",
+    "requiredClass": "uv_filter",
+    "requiredType": null,
+    "severity": "HIGH",
+    "message": "Add an SPF as the last step of your morning. It is the single most useful step, especially when you use actives."
+  },
+  {
+    "slot": "BOTH",
+    "requiredClass": null,
+    "requiredType": "MOISTURIZER",
+    "severity": "MEDIUM",
+    "message": "Add a moisturizer. Actives work better, and sting less, on a well-moisturized skin barrier."
+  },
+  {
+    "slot": "BOTH",
+    "requiredClass": null,
+    "requiredType": "CLEANSER",
+    "severity": "LOW",
+    "message": "Add a gentle cleanser so everything after it goes onto clean skin and absorbs evenly."
+  }
+]

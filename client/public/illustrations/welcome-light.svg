@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 130" fill="none" role="img" aria-labelledby="t">
+  <title id="t">Three skincare bottles standing together</title>
+  <rect x="40" y="112" width="220" height="8" rx="4" fill="#EEF1F5" stroke="#D5DBE3"/>
+  <!-- pump -->
+  <rect x="82" y="22" width="20" height="7" rx="2" fill="#3E9478"/>
+  <rect x="87" y="29" width="10" height="12" rx="2" fill="#3E9478" fill-opacity="0.75"/>
+  <rect x="70" y="41" width="44" height="71" rx="13" fill="#3E9478" fill-opacity="0.16" stroke="#3E9478" stroke-width="2"/>
+  <rect x="80" y="64" width="24" height="26" rx="5" fill="#3E9478"/>
+  <!-- dropper -->
+  <ellipse cx="150" cy="36" rx="8" ry="9" fill="#6B70D6"/>
+  <rect x="142" y="44" width="16" height="12" rx="3" fill="#6B70D6" fill-opacity="0.75"/>
+  <rect x="130" y="56" width="40" height="56" rx="11" fill="#6B70D6" fill-opacity="0.16" stroke="#6B70D6" stroke-width="2"/>
+  <rect x="138" y="70" width="24" height="26" rx="5" fill="#6B70D6"/>
+  <!-- jar -->
+  <rect x="190" y="74" width="52" height="12" rx="4" fill="#C9713F"/>
+  <rect x="186" y="86" width="60" height="26" rx="8" fill="#C9713F" fill-opacity="0.16" stroke="#C9713F" stroke-width="2"/>
+  <rect x="202" y="91" width="28" height="15" rx="4" fill="#C9713F"/>
+</svg>

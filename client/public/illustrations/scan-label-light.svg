@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 150" fill="none" role="img" aria-labelledby="t">
+  <title id="t">A phone framing the ingredient list on a bottle</title>
+  <!-- bottle behind -->
+  <rect x="62" y="30" width="76" height="110" rx="18" fill="#3D74CC" fill-opacity="0.12" stroke="#3D74CC" stroke-opacity="0.6" stroke-width="2"/>
+  <g fill="#3D74CC" opacity="0.7">
+    <rect x="76" y="62" width="48" height="5" rx="2.5"/>
+    <rect x="76" y="74" width="40" height="5" rx="2.5"/>
+    <rect x="76" y="86" width="44" height="5" rx="2.5"/>
+    <rect x="76" y="98" width="30" height="5" rx="2.5"/>
+  </g>
+  <!-- viewfinder corners -->
+  <g stroke="#6B70D6" stroke-width="4" stroke-linecap="round">
+    <path d="M60 50V40h10M130 40h10v10M140 110v10h-10M70 120H60v-10"/>
+  </g>
+  <rect x="58" y="79" width="84" height="2.5" rx="1.25" fill="#6B70D6"/>
+</svg>

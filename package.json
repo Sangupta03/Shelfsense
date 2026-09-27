@@ -1,0 +1,27 @@
+{
+  "name": "shelfsense",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Scan your skincare labels, catch clashes, doubles and gaps, and get a routine built from what you own.",
+  "engines": {
+    "node": ">=22"
+  },
+  "workspaces": [
+    "client",
+    "server",
+    "shared"
+  ],
+  "scripts": {
+    "dev": "concurrently -n server,client -c cyan,magenta \"npm run dev -w server\" \"npm run dev -w client\"",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm test -w server",
+    "build": "npm run build -w client && npm run build -w server",
+    "start": "npm start -w server",
+    "db:migrate": "npm exec -w server -- prisma migrate dev",
+    "db:deploy": "npm exec -w server -- prisma migrate deploy",
+    "db:studio": "npm exec -w server -- prisma studio"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}

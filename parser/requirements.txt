@@ -1,0 +1,9 @@
+# What the parser needs to RUN. Vercel installs only this file.
+# For tests, linting and the seed script, install requirements-dev.txt instead.
+
+fastapi>=0.116,<1
+uvicorn>=0.35,<1           # local server (Vercel runs the app itself)
+python-multipart>=0.0.20   # FastAPI needs this to accept file uploads
+pillow>=11.3,<13
+google-genai>=2.20,<3      # Gemini, for reading label photos
+rapidfuzz>=3.13,<4

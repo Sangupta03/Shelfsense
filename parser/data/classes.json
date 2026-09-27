@@ -1,0 +1,13 @@
+[
+  { "slug": "retinoid", "name": "Retinoid", "isActive": true },
+  { "slug": "aha", "name": "AHA (exfoliating acid)", "isActive": true },
+  { "slug": "bha", "name": "BHA (salicylic acid)", "isActive": true },
+  { "slug": "vitamin_c", "name": "Vitamin C", "isActive": true },
+  { "slug": "benzoyl_peroxide", "name": "Benzoyl peroxide", "isActive": true },
+  { "slug": "niacinamide", "name": "Niacinamide", "isActive": true },
+  { "slug": "azelaic", "name": "Azelaic acid", "isActive": true },
+  { "slug": "uv_filter", "name": "UV filter", "isActive": false },
+  { "slug": "humectant", "name": "Humectant", "isActive": false },
+  { "slug": "barrier", "name": "Barrier support", "isActive": false },
+  { "slug": "fragrance", "name": "Fragrance", "isActive": false }
+]

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 190" fill="none" role="img" aria-labelledby="t">
+  <title id="t">An empty shelf waiting for its first product</title>
+  <rect x="30" y="150" width="260" height="12" rx="6" fill="#1E2530" stroke="#2A3240"/>
+  <path d="M70 162v16M250 162v16" stroke="#2A3240" stroke-width="5" stroke-linecap="round"/>
+
+  <!-- ghost bottles -->
+  <g stroke="#2A3240" stroke-width="2" stroke-dasharray="5 5">
+    <rect x="66" y="78" width="40" height="72" rx="12"/>
+    <rect x="80" y="62" width="12" height="16" rx="3"/>
+    <rect x="214" y="96" width="48" height="54" rx="12"/>
+    <rect x="218" y="84" width="40" height="12" rx="4"/>
+  </g>
+
+  <!-- the spot for the new one -->
+  <rect x="128" y="54" width="64" height="96" rx="16" fill="#A7D7C5" fill-opacity="0.10" stroke="#A7D7C5" stroke-width="2" stroke-dasharray="6 5"/>
+  <circle cx="160" cy="102" r="16" fill="#A7D7C5"/>
+  <path d="M160 94v16M152 102h16" stroke="#0E1116" stroke-width="2.6" stroke-linecap="round"/>
+</svg>

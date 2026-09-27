@@ -1,0 +1,192 @@
+// The whole database lives in this file. `prisma migrate dev` turns it into SQL.
+//
+// I map every model to a snake_case table (@@map) and every field to a snake_case
+// column (@map). Prisma doesn't care, but the analysis queries are hand-written SQL,
+// and `products.user_id` reads a lot nicer than `"Product"."userId"` with quotes everywhere.
+
+// engineType "client" = no separate native query engine file. Prisma talks to
+// Postgres through the plain `pg` driver instead (see src/lib/db.ts). Serverless
+// hosts like Vercel like this much better: smaller bundle, nothing to lose in bundling.
+generator client {
+  provider   = "prisma-client-js"
+  engineType = "client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Slot {
+  AM
+  PM
+  BOTH
+
+  @@map("slot")
+}
+
+enum ProductType {
+  CLEANSER
+  TONER
+  SERUM
+  MOISTURIZER
+  SUNSCREEN
+  TREATMENT
+  OTHER
+
+  @@map("product_type")
+}
+
+enum Severity {
+  LOW
+  MEDIUM
+  HIGH
+
+  @@map("severity")
+}
+
+enum InputMethod {
+  PASTE
+  UPLOAD
+  SCAN
+
+  @@map("input_method")
+}
+
+model User {
+  id           String     @id @default(cuid())
+  email        String     @unique // always stored lowercase
+  name         String
+  passwordHash String     @map("password_hash") // bcrypt hash, never the real password
+  isDemo       Boolean    @default(false) @map("is_demo")
+  createdAt    DateTime   @default(now()) @map("created_at")
+  sessions     Session[]
+  products     Product[]
+  coachRuns    CoachRun[]
+
+  @@map("users")
+}
+
+model Session {
+  // sha256 of the random token. The raw token only ever lives in the user's cookie,
+  // so a leaked copy of this table can't be used to log in as anyone.
+  id        String   @id
+  userId    String   @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime @map("expires_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([userId])
+  @@map("sessions")
+}
+
+model Product {
+  id          String              @id @default(cuid())
+  userId      String              @map("user_id")
+  user        User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  brand       String
+  name        String
+  type        ProductType
+  slot        Slot
+  inputMethod InputMethod         @map("input_method")
+  createdAt   DateTime            @default(now()) @map("created_at")
+  ingredients ProductIngredient[]
+
+  @@index([userId])
+  @@map("products")
+}
+
+model Ingredient {
+  id          Int                 @id @default(autoincrement())
+  inciName    String              @unique @map("inci_name") // standard name, e.g. "NIACINAMIDE"
+  description String
+  aliases     IngredientAlias[]
+  classes     ClassMember[]
+  products    ProductIngredient[]
+
+  @@map("ingredients")
+}
+
+model IngredientAlias {
+  alias        String     @id // lowercase, e.g. "vitamin b3"
+  ingredientId Int        @map("ingredient_id")
+  ingredient   Ingredient @relation(fields: [ingredientId], references: [id], onDelete: Cascade)
+
+  @@index([ingredientId])
+  @@map("ingredient_aliases")
+}
+
+model IngredientClass {
+  id       Int           @id @default(autoincrement())
+  slug     String        @unique // "retinoid", "aha", "uv_filter"...
+  name     String
+  isActive Boolean       @map("is_active") // only active classes count as doubles
+  members  ClassMember[]
+
+  @@map("ingredient_classes")
+}
+
+// many-to-many: an ingredient can be in several classes, a class has many ingredients
+model ClassMember {
+  classId      Int             @map("class_id")
+  ingredientId Int             @map("ingredient_id")
+  class        IngredientClass @relation(fields: [classId], references: [id], onDelete: Cascade)
+  ingredient   Ingredient      @relation(fields: [ingredientId], references: [id], onDelete: Cascade)
+
+  @@id([classId, ingredientId])
+  @@index([ingredientId])
+  @@map("class_members")
+}
+
+// many-to-many between products and ingredients, but it also remembers ORDER.
+// Labels list ingredients from most to least, so position is the only honest
+// "how much is in there" signal we have.
+model ProductIngredient {
+  productId    String      @map("product_id")
+  position     Int // 1 = first on the label
+  ingredientId Int?        @map("ingredient_id") // null when the parser couldn't match it
+  rawText      String      @map("raw_text")
+  confidence   Int // 0-100
+  product      Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+  ingredient   Ingredient? @relation(fields: [ingredientId], references: [id], onDelete: SetNull)
+
+  @@id([productId, position])
+  @@index([ingredientId])
+  @@map("product_ingredients")
+}
+
+model InteractionRule {
+  id           Int      @id @default(autoincrement())
+  classASlug   String   @map("class_a_slug")
+  classBSlug   String   @map("class_b_slug")
+  severity     Severity
+  sameSlotOnly Boolean  @default(true) @map("same_slot_only")
+  message      String
+
+  @@map("interaction_rules")
+}
+
+model GapRule {
+  id            Int          @id @default(autoincrement())
+  slot          Slot // BOTH here means "somewhere in either routine"
+  requiredClass String?      @map("required_class") // e.g. "uv_filter"
+  requiredType  ProductType? @map("required_type") // e.g. MOISTURIZER
+  severity      Severity
+  message       String
+
+  @@map("gap_rules")
+}
+
+// cache for the routine coach, so the same shelf never costs a second LLM call
+model CoachRun {
+  id           String   @id @default(cuid())
+  userId       String   @map("user_id")
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  findingsHash String   @map("findings_hash") // sha256 of products + findings
+  output       Json
+  model        String
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@unique([userId, findingsHash])
+  @@map("coach_runs")
+}

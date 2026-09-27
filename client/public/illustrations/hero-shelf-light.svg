@@ -1,0 +1,118 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 440" fill="none" role="img" aria-labelledby="t">
+  <title id="t">A shelf of skincare bottles being scanned, with ingredient findings floating beside it</title>
+  <defs>
+    <linearGradient id="scanline" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0" stop-color="#6B70D6" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="#6B70D6" stop-opacity="0.9"/>
+      <stop offset="1" stop-color="#6B70D6" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="beam" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="#6B70D6" stop-opacity="0.18"/>
+      <stop offset="1" stop-color="#6B70D6" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="glass" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.10"/>
+      <stop offset="0.35" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- back panel -->
+  <rect x="24" y="36" width="512" height="360" rx="28" fill="#FFFFFF" stroke="#D5DBE3"/>
+  <g opacity="0.55" fill="#D5DBE3">
+    <circle cx="60" cy="70" r="1.6"/><circle cx="84" cy="70" r="1.6"/><circle cx="108" cy="70" r="1.6"/>
+    <circle cx="60" cy="94" r="1.6"/><circle cx="84" cy="94" r="1.6"/><circle cx="108" cy="94" r="1.6"/>
+    <circle cx="452" cy="330" r="1.6"/><circle cx="476" cy="330" r="1.6"/><circle cx="500" cy="330" r="1.6"/>
+    <circle cx="452" cy="354" r="1.6"/><circle cx="476" cy="354" r="1.6"/><circle cx="500" cy="354" r="1.6"/>
+  </g>
+
+  <!-- shelf -->
+  <rect x="56" y="318" width="448" height="14" rx="7" fill="#EEF1F5" stroke="#D5DBE3"/>
+  <path d="M110 332v22M450 332v22" stroke="#D5DBE3" stroke-width="6" stroke-linecap="round"/>
+
+  <!-- 1. pump cleanser (sage) -->
+  <g>
+    <rect x="104" y="150" width="30" height="10" rx="3" fill="#3E9478"/>
+    <rect x="134" y="150" width="20" height="7" rx="3" fill="#3E9478"/>
+    <rect x="112" y="160" width="14" height="20" rx="2" fill="#3E9478" fill-opacity="0.75"/>
+    <rect x="84" y="180" width="70" height="138" rx="22" fill="#3E9478" fill-opacity="0.16" stroke="#3E9478" stroke-width="2.5"/>
+    <rect x="84" y="180" width="70" height="138" rx="22" fill="url(#glass)"/>
+    <rect x="96" y="226" width="46" height="52" rx="8" fill="#3E9478"/>
+    <rect x="104" y="238" width="30" height="5" rx="2.5" fill="#FFFFFF" opacity="0.6"/>
+    <rect x="104" y="249" width="22" height="4" rx="2" fill="#FFFFFF" opacity="0.4"/>
+    <rect x="104" y="259" width="26" height="4" rx="2" fill="#FFFFFF" opacity="0.4"/>
+  </g>
+
+  <!-- 2. dropper serum (periwinkle) -->
+  <g>
+    <ellipse cx="202" cy="196" rx="12" ry="14" fill="#6B70D6"/>
+    <rect x="190" y="208" width="24" height="18" rx="4" fill="#6B70D6" fill-opacity="0.75"/>
+    <path d="M174 244a14 14 0 0 1 14-14h28a14 14 0 0 1 14 14v60a14 14 0 0 1-14 14h-28a14 14 0 0 1-14-14Z" fill="#6B70D6" fill-opacity="0.16" stroke="#6B70D6" stroke-width="2.5"/>
+    <rect x="182" y="258" width="40" height="40" rx="7" fill="#6B70D6"/>
+    <rect x="189" y="268" width="26" height="4.5" rx="2.2" fill="#FFFFFF" opacity="0.6"/>
+    <rect x="189" y="278" width="18" height="4" rx="2" fill="#FFFFFF" opacity="0.4"/>
+  </g>
+
+  <!-- 3. tall toner (sky) - the one being scanned -->
+  <g>
+    <rect x="266" y="118" width="32" height="24" rx="6" fill="#3D74CC"/>
+    <rect x="254" y="142" width="56" height="176" rx="14" fill="#3D74CC" fill-opacity="0.16" stroke="#3D74CC" stroke-width="2.5"/>
+    <rect x="254" y="142" width="56" height="176" rx="14" fill="url(#glass)"/>
+    <rect x="262" y="198" width="40" height="78" rx="7" fill="#3D74CC"/>
+    <rect x="269" y="208" width="26" height="5" rx="2.5" fill="#FFFFFF" opacity="0.6"/>
+    <rect x="269" y="219" width="20" height="3.5" rx="1.75" fill="#FFFFFF" opacity="0.4"/>
+    <rect x="269" y="227" width="24" height="3.5" rx="1.75" fill="#FFFFFF" opacity="0.4"/>
+    <rect x="269" y="235" width="16" height="3.5" rx="1.75" fill="#FFFFFF" opacity="0.4"/>
+    <rect x="269" y="243" width="22" height="3.5" rx="1.75" fill="#FFFFFF" opacity="0.4"/>
+    <rect x="269" y="251" width="18" height="3.5" rx="1.75" fill="#FFFFFF" opacity="0.4"/>
+  </g>
+
+  <!-- scan frame around the toner -->
+  <g stroke="#6B70D6" stroke-width="3" stroke-linecap="round">
+    <path d="M238 112v-16h18M326 96h18v16M344 316v16h-18M256 332h-18v-16"/>
+  </g>
+  <rect x="240" y="236" width="102" height="54" fill="url(#beam)"/>
+  <rect x="236" y="234" width="110" height="3" rx="1.5" fill="url(#scanline)"/>
+
+  <!-- 4. jar moisturizer (peach) -->
+  <g>
+    <rect x="364" y="250" width="100" height="22" rx="7" fill="#C9713F"/>
+    <rect x="360" y="272" width="108" height="46" rx="14" fill="#C9713F" fill-opacity="0.16" stroke="#C9713F" stroke-width="2.5"/>
+    <rect x="386" y="280" width="56" height="28" rx="6" fill="#C9713F"/>
+    <rect x="394" y="288" width="40" height="4.5" rx="2.2" fill="#FFFFFF" opacity="0.6"/>
+    <rect x="394" y="297" width="26" height="4" rx="2" fill="#FFFFFF" opacity="0.4"/>
+  </g>
+
+  <!-- 5. sunscreen tube (butter), standing on its cap -->
+  <g>
+    <path d="M470 160h40l-4 10h-32Z" fill="#B8900A"/>
+    <path d="M474 170h32l-6 118h-20Z" fill="#B8900A" fill-opacity="0.16" stroke="#B8900A" stroke-width="2.5" stroke-linejoin="round"/>
+    <rect x="478" y="288" width="24" height="30" rx="5" fill="#B8900A"/>
+    <rect x="480" y="196" width="20" height="40" rx="5" fill="#B8900A"/>
+    <rect x="484" y="204" width="12" height="4" rx="2" fill="#FFFFFF" opacity="0.6"/>
+    <rect x="484" y="213" width="9" height="3.5" rx="1.75" fill="#FFFFFF" opacity="0.4"/>
+  </g>
+
+  <!-- floating finding chips -->
+  <g font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="600">
+    <!-- matched -->
+    <g transform="translate(336 116)">
+      <rect width="162" height="32" rx="16" fill="#3E9478" fill-opacity="0.14" stroke="#3E9478" stroke-opacity="0.7"/>
+      <circle cx="18" cy="16" r="8" fill="#3E9478"/>
+      <path d="m14.2 16.2 2.6 2.6 5-5.2" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="34" y="20.5" fill="#3E9478">Niacinamide · 2nd</text>
+    </g>
+    <!-- clash -->
+    <g transform="translate(44 108)">
+      <rect width="170" height="32" rx="16" fill="#D0564E" fill-opacity="0.14" stroke="#D0564E" stroke-opacity="0.7"/>
+      <path d="M18 8.5 26 23H10Z" fill="#D0564E"/>
+      <path d="M18 13.5v4.2M18 20.2h.01" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round"/>
+      <text x="34" y="20.5" fill="#D0564E">Retinol × Glycolic</text>
+    </g>
+    <!-- gap -->
+    <g transform="translate(206 350)">
+      <rect width="148" height="32" rx="16" fill="#B8900A" fill-opacity="0.14" stroke="#B8900A" stroke-opacity="0.7"/>
+      <circle cx="18" cy="16" r="7" stroke="#B8900A" stroke-width="2" stroke-dasharray="3 2.4"/>
+      <text x="34" y="20.5" fill="#B8900A">No AM sunscreen</text>
+    </g>
+  </g>
+</svg>

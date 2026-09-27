@@ -1,0 +1,56 @@
+{
+  "user": {
+    "email": "demo@shelfsense.app",
+    "name": "Demo"
+  },
+  "products": [
+    {
+      "brand": "Nightshift",
+      "name": "Retinol 0.3% Serum",
+      "type": "SERUM",
+      "slot": "PM",
+      "inputMethod": "PASTE",
+      "ingredients": "Aqua, Squalane, Glycerin, Caprylic/Capric Triglyceride, Retinol, Tocopherol, Ceramide NP, Cholesterol, Carbomer, Phenoxyethanol, Ethylhexylglycerin"
+    },
+    {
+      "brand": "Clearwave",
+      "name": "Glycolic 7% Toning Solution",
+      "type": "TONER",
+      "slot": "PM",
+      "inputMethod": "SCAN",
+      "ingredients": "Aqua (Water), Glycolic Acid, Aloe Barbadensis Leaf Juice, Glycerin, Sodium Hydroxide, Panthenol, Allantoin, Phenoxyethanol"
+    },
+    {
+      "brand": "Everyday Lab",
+      "name": "Niacinamide 10% Serum",
+      "type": "SERUM",
+      "slot": "BOTH",
+      "inputMethod": "UPLOAD",
+      "ingredients": "Aqua, Niacinamide, Pentylene Glycol, Zinc PCA, Tamarindus Indica Seed Gum, Sodium Hyaluronate, Xanthan Gum, Phenoxyethanol, Ethylhexylglycerin"
+    },
+    {
+      "brand": "Cloudbase",
+      "name": "Oil-Free Gel Moisturizer",
+      "type": "MOISTURIZER",
+      "slot": "BOTH",
+      "inputMethod": "PASTE",
+      "ingredients": "Aqua, Glycerin, Dimethicone, Niacinamide, Butylene Glycol, Sodium Hyaluronate, Ceramide NP, Carbomer, Phenoxyethanol, Disodium EDTA"
+    },
+    {
+      "brand": "Brightside",
+      "name": "Vitamin C 15% Serum",
+      "type": "SERUM",
+      "slot": "AM",
+      "inputMethod": "SCAN",
+      "ingredients": "Aqua, Ascorbic Acid, Propanediol, Tocopherol, Sodium Hyaluronate, Citric Acid, Phenoxyethanol"
+    },
+    {
+      "brand": "Softwash",
+      "name": "Gentle Cream Cleanser",
+      "type": "CLEANSER",
+      "slot": "BOTH",
+      "inputMethod": "PASTE",
+      "ingredients": "Aqua, Glycerin, Cocamidopropyl Betaine, Cetearyl Alcohol, Ceramide NP, Ceramide AP, Cholesterol, Sodium Chloride, Parfum"
+    }
+  ]
+}

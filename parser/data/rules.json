@@ -1,0 +1,58 @@
+[
+  {
+    "classA": "retinoid",
+    "classB": "aha",
+    "severity": "HIGH",
+    "sameSlotOnly": true,
+    "message": "Both speed up skin turnover, and together they often cause redness and peeling. Use them on alternate nights."
+  },
+  {
+    "classA": "retinoid",
+    "classB": "bha",
+    "severity": "HIGH",
+    "sameSlotOnly": true,
+    "message": "A retinoid plus salicylic acid in one routine is a lot of irritation at once. Alternate nights instead."
+  },
+  {
+    "classA": "retinoid",
+    "classB": "benzoyl_peroxide",
+    "severity": "HIGH",
+    "sameSlotOnly": true,
+    "message": "Very drying together, and benzoyl peroxide can break down some retinoids. Keep them in separate routines."
+  },
+  {
+    "classA": "aha",
+    "classB": "bha",
+    "severity": "MEDIUM",
+    "sameSlotOnly": true,
+    "message": "Two exfoliating acids in the same routine can over-exfoliate. Pick one per routine."
+  },
+  {
+    "classA": "vitamin_c",
+    "classB": "aha",
+    "severity": "MEDIUM",
+    "sameSlotOnly": true,
+    "message": "Stacking vitamin C and exfoliating acids can sting. Try vitamin C in the morning and acids at night."
+  },
+  {
+    "classA": "vitamin_c",
+    "classB": "bha",
+    "severity": "MEDIUM",
+    "sameSlotOnly": true,
+    "message": "Vitamin C and salicylic acid together can sting. Try vitamin C in the morning and the BHA at night."
+  },
+  {
+    "classA": "vitamin_c",
+    "classB": "benzoyl_peroxide",
+    "severity": "MEDIUM",
+    "sameSlotOnly": true,
+    "message": "Benzoyl peroxide can oxidise vitamin C, so neither works as well. Use them at different times of day."
+  },
+  {
+    "classA": "retinoid",
+    "classB": "vitamin_c",
+    "severity": "LOW",
+    "sameSlotOnly": true,
+    "message": "Fine for many people, but the easiest setup is vitamin C in the morning and the retinoid at night."
+  }
+]

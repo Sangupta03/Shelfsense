@@ -1,0 +1,30 @@
+# dependencies
+node_modules/
+
+# python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+
+# build output
+dist/
+*.tsbuildinfo
+
+# secrets - only the .example files get committed
+.env
+.env.*
+!*.example
+
+# editor / OS junk
+.DS_Store
+Thumbs.db
+.idea/
+*.log
+
+# real label photos stay on my machine (they can have faces/hands in them)
+parser/tests/fixtures/real/
+
+# my personal build diary and notes - kept local, never pushed
+docs/

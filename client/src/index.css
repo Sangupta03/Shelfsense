@@ -1,0 +1,170 @@
+@import "tailwindcss";
+
+/* ---------- design tokens ---------- */
+
+/* dark (the default): dark base + pastel accents */
+:root {
+  --ink: #0e1116; /* page background */
+  --surface: #161b22; /* cards */
+  --surface-2: #1e2530; /* inputs, hover, nested cards */
+  --line: #2a3240; /* borders */
+  --text: #e6e9ef;
+  --muted: #9aa4b2;
+  --sage: #a7d7c5; /* primary, matched, all good */
+  --sky: #a9c9f5; /* links, focus, low severity */
+  --periwinkle: #c3c7f4; /* accents, coach, scan area */
+  --butter: #f2e3a1; /* medium severity, please check */
+  --peach: #f6c8a8; /* doubles */
+  --coral: #f2a7a0; /* high severity, unknown, errors */
+  --scrim: rgb(14 17 22 / 0.7); /* behind the drawer */
+
+  color-scheme: dark;
+}
+
+/* light: same token names, so every component just works.
+   Pastels are too pale to read as text on white, so each accent gets a deeper
+   version here (all at least 4.5:1 on white). "ink" stays "the page colour",
+   which keeps text-ink readable on accent buttons in both themes. */
+:root[data-theme="light"] {
+  --ink: #f7f8fa;
+  --surface: #ffffff;
+  --surface-2: #f1f3f6;
+  --line: #dde2e9;
+  --text: #141a22;
+  --muted: #5b6573;
+  --sage: #2a7560;
+  --sky: #2f62b8;
+  --periwinkle: #5a5fc7;
+  --butter: #806200;
+  --peach: #a94e24;
+  --coral: #c2413a;
+  --scrim: rgb(20 26 34 / 0.35);
+
+  color-scheme: light;
+}
+
+/* map the variables into Tailwind, so `bg-surface` or `text-sage/80` just work */
+@theme inline {
+  --color-ink: var(--ink);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-line: var(--line);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
+  --color-sage: var(--sage);
+  --color-sky: var(--sky);
+  --color-periwinkle: var(--periwinkle);
+  --color-butter: var(--butter);
+  --color-peach: var(--peach);
+  --color-coral: var(--coral);
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk", "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    background: var(--ink);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    @apply min-h-screen bg-ink font-sans text-text;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply font-display tracking-tight;
+  }
+
+  /* numbers line up in the counters */
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--sky);
+    outline-offset: 2px;
+    border-radius: 0.5rem;
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--periwinkle) 35%, transparent);
+  }
+}
+
+@layer components {
+  .card {
+    @apply rounded-2xl border border-line bg-surface p-5 sm:p-6;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold
+      transition-colors duration-150 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  /* variants - always used together with .btn, e.g. className="btn btn-primary" */
+  .btn-primary {
+    @apply bg-sage text-ink hover:bg-sage/85;
+  }
+  .btn-outline {
+    @apply border border-line bg-transparent text-text hover:border-muted hover:bg-surface-2;
+  }
+  .btn-ghost {
+    @apply px-3 text-muted hover:bg-surface-2 hover:text-text;
+  }
+  .btn-danger {
+    @apply border border-coral/40 bg-coral/10 text-coral hover:bg-coral/20;
+  }
+
+  .label {
+    @apply mb-1.5 block text-sm font-medium text-text;
+  }
+  .input {
+    @apply w-full rounded-xl border border-line bg-surface-2 px-3.5 py-2.5 text-sm text-text
+      placeholder:text-muted/70 transition-colors duration-150 hover:border-muted/60
+      focus:border-sky focus:outline-none;
+  }
+  .input-error {
+    @apply border-coral/70;
+  }
+  .field-error {
+    @apply mt-1.5 text-sm text-coral;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium;
+  }
+
+  .skeleton {
+    @apply rounded-lg bg-surface-2 motion-safe:animate-pulse;
+  }
+
+  .eyebrow {
+    @apply text-xs font-semibold uppercase tracking-[0.14em] text-muted;
+  }
+}
+
+/* the one soft glow behind the hero (sage + periwinkle, ~15%) */
+.hero-glow {
+  background:
+    radial-gradient(40% 50% at 35% 45%, color-mix(in srgb, var(--sage) 16%, transparent), transparent 70%),
+    radial-gradient(40% 50% at 65% 55%, color-mix(in srgb, var(--periwinkle) 16%, transparent), transparent 70%);
+  filter: blur(40px);
+}
+
+/* faint dot grid used behind a couple of sections */
+.dot-grid {
+  background-image: radial-gradient(color-mix(in srgb, var(--line) 80%, transparent) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0ms !important;
+    animation-duration: 0ms !important;
+  }
+}
