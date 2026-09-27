@@ -1,4 +1,4 @@
-import { queryOptions, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { queryOptions, useMutation, useQuery, useQueryClient, type QueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import type { LoginInput, MeResponse, PublicUser, SignupInput } from "@shelfsense/shared";
 import { ApiError, api } from "./api";
@@ -24,6 +24,16 @@ export function useMe() {
   return useQuery(meQuery);
 }
 
+/**
+ * Forget everything cached for the previous user (their shelf, report...) EXCEPT the
+ * "me" entry, which we update in place. Deleting "me" too (queryClient.clear()) left
+ * the header watching a removed entry, so it kept showing the logged-out menu.
+ */
+function switchUser(queryClient: QueryClient, user: PublicUser | null): void {
+  queryClient.removeQueries({ predicate: (query) => query.queryKey[0] !== meQuery.queryKey[0] });
+  queryClient.setQueryData(meQuery.queryKey, user);
+}
+
 /** Shared by login, signup and demo: remember the user, then go to the shelf. */
 function useStartSession<TInput>(send: (input: TInput) => Promise<MeResponse>) {
   const queryClient = useQueryClient();
@@ -32,8 +42,7 @@ function useStartSession<TInput>(send: (input: TInput) => Promise<MeResponse>) {
   return useMutation({
     mutationFn: send,
     onSuccess: async ({ user }) => {
-      queryClient.clear(); // drop anything cached from a previous user
-      queryClient.setQueryData(meQuery.queryKey, user);
+      switchUser(queryClient, user);
       await navigate({ to: "/shelf" });
     },
   });
@@ -58,9 +67,8 @@ export function useLogout() {
   return useMutation({
     mutationFn: () => api<void>("POST", "/auth/logout"),
     onSettled: async () => {
-      // wipe the whole cache, so the next person on this browser sees nothing of ours
-      queryClient.clear();
-      queryClient.setQueryData(meQuery.queryKey, null);
+      // forget this user's data, so the next person on this browser sees nothing of ours
+      switchUser(queryClient, null);
       await navigate({ to: "/" });
     },
   });

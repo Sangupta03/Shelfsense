@@ -1,275 +1,303 @@
+<div align="center">
+
+<img src="client/public/favicon.svg" width="80" alt="ShelfSense logo" />
+
 # ShelfSense
 
-**Scan the ingredient labels of the skincare you already own. ShelfSense tells you what clashes, what you're doubling up on and what your routine is missing — then builds a morning and evening routine using only the products on your shelf.**
+**Know what's on your shelf.**
 
-![CI](https://github.com/Sangupta03/Shelfsense/actions/workflows/ci.yml/badge.svg)
+Scan the ingredient labels of the skincare you already own. ShelfSense finds what **clashes**, what you're **doubling up on** and what's **missing**, then builds a morning and evening routine using **only the products you have**.
 
-**Live:** _add your Vercel URL here_ · **Demo:** press **Demo** / **Try the demo** anywhere on the site (read-only sample shelf, no sign-up)
+<a href="https://shelfsense-wine-kappa.vercel.app"><img alt="Open the live demo" src="https://img.shields.io/badge/Live_demo-Open_ShelfSense-A7D7C5?style=for-the-badge&logo=vercel&logoColor=0E1116&labelColor=161B22" /></a>
+&nbsp;
+<a href="https://github.com/Sangupta03/Shelfsense/actions/workflows/ci.yml"><img alt="CI status" src="https://github.com/Sangupta03/Shelfsense/actions/workflows/ci.yml/badge.svg" /></a>
 
-![ShelfSense landing page, dark theme](.github/screenshots/landing.png)
+<img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white" />
+<img alt="React" src="https://img.shields.io/badge/React_19-20232A?style=flat-square&logo=react&logoColor=61DAFB" />
+<img alt="Node.js" src="https://img.shields.io/badge/Node.js_22-339933?style=flat-square&logo=nodedotjs&logoColor=white" />
+<img alt="Express" src="https://img.shields.io/badge/Express_5-000000?style=flat-square&logo=express&logoColor=white" />
+<img alt="Python" src="https://img.shields.io/badge/Python_3.12-3776AB?style=flat-square&logo=python&logoColor=white" />
+<img alt="FastAPI" src="https://img.shields.io/badge/FastAPI-009688?style=flat-square&logo=fastapi&logoColor=white" />
+<img alt="PostgreSQL" src="https://img.shields.io/badge/PostgreSQL-4169E1?style=flat-square&logo=postgresql&logoColor=white" />
+<img alt="Prisma" src="https://img.shields.io/badge/Prisma-2D3748?style=flat-square&logo=prisma&logoColor=white" />
+<img alt="Tailwind CSS" src="https://img.shields.io/badge/Tailwind_CSS_4-0F172A?style=flat-square&logo=tailwindcss&logoColor=38BDF8" />
+<img alt="Gemini" src="https://img.shields.io/badge/Google_Gemini-8E75B2?style=flat-square&logo=googlegemini&logoColor=white" />
+<img alt="Vercel" src="https://img.shields.io/badge/Vercel-000000?style=flat-square&logo=vercel&logoColor=white" />
 
-<details>
-<summary>Light theme</summary>
+<br /><br />
 
-![ShelfSense landing page, light theme](.github/screenshots/landing-light.png)
+<img src=".github/screenshots/landing.png" alt="ShelfSense home page in the dark theme" width="100%" />
 
-</details>
+</div>
+
+> [!TIP]
+> **Try it in 30 seconds:** open the [live site](https://shelfsense-wine-kappa.vercel.app) and press **Demo**. You get a read-only sample shelf with a real clash, a double and a missing step, no sign-up needed.
+
+## Contents
+
+[How it works](#-how-it-works) · [Highlights](#-highlights) · [Screenshots](#-screenshots) · [Features](#-features) · [Architecture](#-architecture) · [Tech stack](#-tech-stack) · [Run it locally](#-run-it-locally) · [Deploy](#-deploy) · [Design decisions](#-design-decisions) · [Security](#-security) · [What's next](#-whats-next)
 
 ---
 
-## What it does
+## 🧴 How it works
 
-| | |
-| --- | --- |
-| **Scan, upload or paste a label** | Three ways in, one pipeline. Photos are tidied with Pillow, read by Gemini, then matched by our own parser. |
-| **Review screen with confidence colours** | Green = matched, yellow = please check, red = unknown. Tap any chip to fix it before saving. |
-| **Clash detector** | "Your retinol serum and glycolic toner are both in your PM routine — high irritation risk." One raw SQL self-join. |
-| **Doubles detector** | "Niacinamide is in 2 of your products (2nd ingredient in one, 4th in the other)." Label position, never guessed percentages. |
-| **Gap finder** | "No sunscreen in your morning routine." A `NOT EXISTS` query per rule. |
-| **Routine coach** | Builds an AM/PM plan from your products only, putting clashing ones on different nights. Guarded, validated and cached. |
-| **Accounts** | Email + password, bcrypt, server-side sessions in Postgres, httpOnly cookies. |
-| **Always-on demo** | A read-only sample shelf, one click away from the header, the home page, login and sign-up. |
-| **Light and dark themes** | Follows your system setting, with a toggle in the header that remembers your choice. |
+| 1. Add your products | 2. ShelfSense checks them | 3. Get your routine |
+| --- | --- | --- |
+| Paste the ingredient list, upload a photo of the label, or scan it with your phone's camera. Then check the matched ingredients before saving. | It compares everything on your shelf against a set of skincare rules: products that **clash**, active ingredients you're **using twice**, and **gaps** like no morning sunscreen. | A morning and evening plan that uses **only your products** and puts clashing ones on **different nights**. |
+
+Every finding comes from a written rule, and the app never invents scores or percentages.
+
+## ⭐ Highlights
+
+- **Full stack in three languages:** React + TypeScript website, Express + TypeScript API, Python label parser, one Postgres database.
+- **SQL does the thinking:** clashes, doubles and gaps are three hand-written SQL queries (a self-join, `GROUP BY … HAVING`, `NOT EXISTS`) over rules stored in the database.
+- **AI used carefully:** Gemini only *copies* text from photos and *writes up* findings. Its answers are type-checked, every product it names must really be on your shelf, answers are cached, and if one model is rate-limited it switches to the next.
+- **Secure by default:** bcrypt passwords, hashed session tokens in httpOnly cookies, rate limits, ownership checks on every query, and photos that are never stored.
+- **80 automated tests** (33 server, 47 parser) run by GitHub Actions on every push.
+- **Deployed for free on Vercel + Neon in Singapore**, close to its users, with light and dark themes and a phone-friendly layout.
+
+## 📸 Screenshots
 
 <table>
   <tr>
-    <td><img src=".github/screenshots/shelf.png" alt="Shelf page with products grouped by morning, evening and both" /></td>
-    <td><img src=".github/screenshots/review.png" alt="Review step with matched, check and unknown ingredient chips" /></td>
+    <td width="50%"><img src=".github/screenshots/shelf.png" alt="Shelf page with products grouped into morning, evening and both" /><p align="center"><sub><b>Your shelf</b>, grouped by when you use each product</sub></p></td>
+    <td width="50%"><img src=".github/screenshots/review.png" alt="Review step with matched, please-check and unknown ingredient chips" /><p align="center"><sub><b>Review step</b>: green = matched, yellow = please check, red = unknown</sub></p></td>
   </tr>
   <tr>
-    <td colspan="2"><img src=".github/screenshots/report.png" alt="Report page with a conflict, a double, a gap and the routine coach" /></td>
+    <td colspan="2"><img src=".github/screenshots/report.png" alt="Report with a conflict, a double, a gap and the routine coach" /><p align="center"><sub><b>The report</b>: a clash, a double, a gap, and a routine that splits the clashing products across nights</sub></p></td>
   </tr>
 </table>
 
----
+<details>
+<summary><b>Light theme</b></summary>
+<br />
+<img src=".github/screenshots/landing-light.png" alt="ShelfSense home page in the light theme" width="100%" />
+</details>
 
-## Architecture
+## 🧩 Features
+
+| Feature | What you get |
+| --- | --- |
+| **Three ways to add a product** | Paste the list, upload a photo, or open your phone's camera straight from the page. |
+| **Review before saving** | Each ingredient is a coloured chip you can tap to fix, confirm or remove. Typos like "Niacinam1de" are still recognised. |
+| **Clash detector** | *"Your retinol serum and glycolic toner are both in your evening routine — high irritation risk."* |
+| **Doubles detector** | *"Niacinamide is in 2 of your products (2nd ingredient in one, 4th in the other)."* Label position, never guessed percentages. |
+| **Gap finder** | *"No sunscreen in your morning routine."* |
+| **Routine coach** | A morning and evening plan written by Gemini, or by built-in rules when there's no API key. |
+| **Accounts and demo** | Private shelves behind a secure login, plus a one-click, read-only demo shelf. |
+| **Light and dark themes** | Follows your system setting, with a toggle that remembers your choice. |
+
+## 🏗️ Architecture
 
 ```mermaid
 flowchart LR
-    B[Browser]
+    B([Browser])
 
-    subgraph "Vercel project: shelfsense (client/)"
-        W[React app on the CDN<br/>+ rewrite /api/* → server]
+    subgraph V1 ["Vercel · shelfsense (client/)"]
+        W["React app on the CDN<br/>rewrite /api/* → server"]
     end
 
-    subgraph "Vercel project: shelfsense-api (server/)"
-        E[Express 5 as a serverless function<br/>auth · products · report · coach]
+    subgraph V2 ["Vercel · shelfsense-server (server/) · Singapore"]
+        E["Express 5 API<br/>auth · products · report · coach"]
     end
 
-    subgraph "Vercel project: shelfsense-parser (parser/)"
-        F[FastAPI as a serverless function<br/>split · match · image · vision]
+    subgraph V3 ["Vercel · shelfsense-parser (parser/) · Singapore"]
+        F["FastAPI label parser<br/>split · match · image · vision"]
     end
 
-    DB[(Postgres on Neon)]
-    LLM[Google Gemini API<br/>optional, with model fallback]
+    DB[("Neon Postgres<br/>Singapore")]
+    LLM["Google Gemini<br/>with model fallback"]
 
     B -- "pages + /api/* (one domain, one cookie)" --> W
     W -- "proxied /api/*" --> E
-    E -- "Prisma (pg driver) + raw SQL" --> DB
-    E -- "X-Parser-Token" --> F
+    E -- "Prisma + raw SQL" --> DB
+    E -- "secret X-Parser-Token" --> F
     F -- "photo → text only" --> LLM
     E -- "routine coach" --> LLM
 ```
 
-**One domain for the browser.** The site and `/api/*` share an address: the web project *rewrites* (proxies) `/api/*` to the API project. The session cookie belongs to one site, so there's no CORS and no cross-site cookie setup. Locally, Vite's dev proxy does the same job.
+- **One domain for the browser.** The website forwards (rewrites) `/api/*` to the server project, so the login cookie belongs to one site: no CORS, no cross-site cookies.
+- **A photo's journey:** browser → Express (login required, kept in memory, 4 MB max) → FastAPI (Pillow fixes rotation and shrinks it) → Gemini copies the ingredient text → my parser splits and matches it → you review it → saved in one transaction. **The photo is never stored.**
+- **A report:** three SQL queries run in parallel against the rules tables, and every finding points back to a rule row.
+- **Why three Vercel projects:** a static website, a Node.js function and a Python function are built and run differently. Splitting them also means only the server knows the database address, and the website holds no secrets at all.
 
-**The flow of a photo:** browser → Express (Multer, in memory, 4 MB cap, login required) → FastAPI (Pillow fixes rotation, shrinks to 1568px, re-encodes as JPEG) → Gemini copies the ingredient text → our `split.py` + `match.py` turn it into matched ingredients → review screen → saved in one transaction. The photo is never written to disk.
-
-**The flow of a report:** three SQL queries (conflicts, doubles, gaps) run in parallel against the rules tables. Every finding points back to a row in `interaction_rules`, `gap_rules` or `ingredient_classes`.
-
----
-
-## Tech stack
+## 🧰 Tech stack
 
 | Part | Tools |
 | --- | --- |
-| Monorepo | npm workspaces (`client`, `server`, `shared`) |
-| Client (`client/`) | React 19, Vite, TypeScript (strict), TanStack Router (code-based), TanStack Query, Tailwind CSS v4 |
-| Server (`server/`) | Node 22, Express 5, TypeScript (strict), Prisma (engine-free, `pg` driver adapter), bcryptjs, cookie-parser, Multer (memory storage), express-rate-limit, Google Gen AI SDK |
-| Shared types (`shared/`) | Plain TypeScript types for every request/response, imported with `import type` |
-| Validation | Hand-written validators + type guards in `server/src/validators/validate.ts` |
-| Parser (`parser/`) | Python 3.12, FastAPI, Pillow, RapidFuzz, Pydantic, Google Gen AI SDK; psycopg + bcrypt for the seed script |
-| Database | PostgreSQL (Neon in production) |
-| Tests | Vitest + Supertest (server, against a real test database), pytest (parser) |
-| CI/CD | GitHub Actions → Vercel (3 projects, auto-deploy on push) |
+| **Client** `client/` | React 19, Vite, TypeScript (strict), TanStack Router, TanStack Query, Tailwind CSS v4 |
+| **Server** `server/` | Node 22, Express 5, TypeScript (strict), Prisma (engine-free, `pg` driver), bcryptjs, Multer, express-rate-limit, Google Gen AI SDK |
+| **Shared types** `shared/` | One set of TypeScript types for every request and response, used by client and server |
+| **Parser** `parser/` | Python 3.12, FastAPI, Pillow, RapidFuzz, Pydantic, Google Gen AI SDK |
+| **Database** | PostgreSQL on Neon (Singapore) |
+| **Tests** | Vitest + Supertest against a real test database, pytest, Ruff |
+| **CI/CD** | GitHub Actions on every push → Vercel auto-deploys |
+| **Monorepo** | npm workspaces |
 
----
-
-## Project structure
+<details>
+<summary><b>Project structure</b></summary>
 
 ```
 shelfsense/
-├── package.json              npm workspaces + root scripts (dev, test, build, db:*)
+├── package.json              npm workspaces + scripts (dev, test, build, db:*)
 ├── client/                   React app (Vite)
-│   ├── public/               favicon + hand-drawn SVG illustrations (light + dark)
+│   ├── public/               favicon + SVG illustrations (light + dark)
 │   ├── src/pages/            Landing, Login, Signup, Shelf, Report, NotFound
 │   ├── src/components/       AddProductDrawer, ScanInput, IngredientReview, FindingCard, CoachPanel, …
-│   ├── src/lib/              api (typed fetch), auth, shelf (queries), theme, labels
-│   └── vercel.json           rewrite /api/* to the server project + SPA fallback
+│   ├── src/lib/              api (typed fetch), auth, shelf, theme, labels
+│   └── vercel.json           /api/* → server + single-page-app fallback
 ├── server/                   Express API
 │   ├── prisma/               schema.prisma + migrations
-│   ├── src/app.ts            builds the Express app (also Vercel's entry point)
-│   ├── src/index.ts          starts it locally (listen)
-│   ├── src/routes/           auth, parse, products, report, coach          ← controllers
-│   ├── src/services/         analysis/ (SQL), coach/, products, sessions, users   ← business logic
-│   ├── src/validators/       validate.ts - every input check
-│   ├── src/middleware/       requireAuth (+ blockDemo), errorHandler, rateLimit
-│   ├── src/lib/              db, env, httpError, llm (Gemini), parserClient  ← infrastructure
-│   ├── src/types/            express.d.ts (adds req.user)
-│   ├── src/generated/        Prisma client (generated on install, git-ignored)
-│   └── test/                 auth, analysis, coach, llm tests
+│   ├── src/app.ts            builds the app (Vercel's entry point)
+│   ├── src/index.ts          starts it locally
+│   ├── src/routes/           auth, parse, products, report, coach        ← controllers
+│   ├── src/services/         analysis (SQL), coach, products, sessions   ← business logic
+│   ├── src/validators/       every input check
+│   ├── src/middleware/       requireAuth, errorHandler, rateLimit
+│   ├── src/lib/              db, env, errors, Gemini client, parser client
+│   ├── src/generated/        Prisma client (generated on install, not committed)
+│   ├── test/                 auth, analysis, coach, llm tests
+│   └── vercel.json           region: Singapore
 ├── shared/                   types shared by client and server
-├── parser/                   Python FastAPI label parser
+├── parser/                   Python label parser
 │   ├── app/                  main, split, match, image, vision, models, config
 │   ├── data/                 ingredients, classes, rules, gap rules, demo shelf (JSON)
 │   ├── scripts/              seed.py, try_vision.py
 │   ├── tests/
-│   ├── requirements.txt      what it needs to run (all Vercel installs)
-│   ├── requirements-dev.txt  + tests, lint, seeding
-│   └── vercel.json
-└── .github/
-    ├── workflows/ci.yml
-    └── screenshots/
+│   ├── requirements.txt      what it needs to run
+│   ├── requirements-dev.txt  + tests, linting, seeding
+│   └── vercel.json           region: Singapore
+└── .github/workflows/ci.yml
 ```
+</details>
 
----
+## 💻 Run it locally
 
-## Run it locally
+**You need:** Node 22 (npm comes with it), Python 3.12+, Git and a Postgres database (a free [Neon](https://neon.com) project works).
 
-You need **Node 22** (npm comes with it), **Python 3.12+**, **Git**, and a **Postgres** database (a free [Neon](https://neon.com) project, or Postgres on your machine).
-
-### 1. Install
-
+**1. Install**
 ```bash
-npm install                      # client, server and shared in one go
+npm install                        # client, server and shared
 
 cd parser
 python -m venv .venv
-source .venv/bin/activate        # Windows: .venv\Scripts\activate
+source .venv/bin/activate          # Windows: .venv\Scripts\activate
 pip install -r requirements-dev.txt
 cd ..
 ```
 
-### 2. Environment variables
-
+**2. Settings**: copy the example files (Windows PowerShell: `Copy-Item` instead of `cp`):
 ```bash
 cp server/.env.example server/.env
 cp server/.env.test.example server/.env.test
 cp parser/.env.example parser/.env
 ```
+- `DATABASE_URL`: your database in `server/.env`, and a **separate** one in `server/.env.test` (the tests add and delete rows).
+- `PARSER_TOKEN`: the same random value in `server/.env` and `parser/.env`. Make one with `node -e "console.log(require('crypto').randomBytes(24).toString('hex'))"`.
+- `GEMINI_API_KEY`: *optional*, free at [Google AI Studio](https://aistudio.google.com/apikey). Without it everything works except reading photos, and the coach uses its built-in rules.
 
-(Windows PowerShell: use `Copy-Item` instead of `cp`.)
-
-- Put your database URL in `server/.env` and a **second, separate** database URL in `server/.env.test` (the tests create and delete rows).
-- Use the same long random `PARSER_TOKEN` in `server/.env` and `parser/.env`. Make one with `node -e "console.log(require('crypto').randomBytes(24).toString('hex'))"`
-- `GEMINI_API_KEY` is **optional** (free key at [Google AI Studio](https://aistudio.google.com/apikey)). Without it, everything works except reading photos, and the coach uses the built-in rule-based routine builder.
-- `GEMINI_MODEL` is a comma-separated list, tried in order. If one model is rate limited (429) or overloaded (503), the next one is used.
-
-### 3. Database
-
+**3. Database**
 ```bash
-npm run db:migrate                              # creates the tables
-cd parser && python scripts/seed.py && cd ..    # ingredients, rules and the demo shelf
+npm run db:migrate                                # create the tables
+cd parser && python scripts/seed.py && cd ..      # ingredients, rules and the demo shelf
 ```
 
-For the test database:
+**4. Start** (two terminals)
+```bash
+npm run dev                                       # terminal 1 → http://localhost:5173
+cd parser && uvicorn app.main:app --port 8001     # terminal 2 (venv active)
+```
+Open **http://localhost:5173** and press **Demo**.
 
+<details>
+<summary><b>Tests, test database and more</b></summary>
+
+**Checks**
+```bash
+npm run typecheck                  # TypeScript in client, server and shared
+npm test                           # server tests (needs the test database)
+npm run build                      # production build
+cd parser && ruff check . && pytest
+```
+
+**Set up the test database once**
 ```bash
 # macOS / Linux
 DATABASE_URL="<test db url>" npm run db:deploy
 # Windows PowerShell
 $env:DATABASE_URL="<test db url>"; npm run db:deploy; Remove-Item Env:DATABASE_URL
 
-cd parser && python scripts/seed.py --env-file ../server/.env.test && cd ..
+cd parser && python scripts/seed.py --env-file ../server/.env.test
 ```
 
-### 4. Start it (two terminals)
+**Phone camera:** run `npm run dev -w client -- --host` and open the "Network" address on your phone (same Wi-Fi).
 
-```bash
-# terminal 1 - repo root
-npm run dev                       # client on http://localhost:5173, server on :3000
+**Real label photos (optional, costs a few cents):** the tests never need real photos. To try real labels against Gemini, put a few photos of ingredient lists in `parser/tests/fixtures/real/` (git-ignored, never pushed), set `GEMINI_API_KEY`, and run `python scripts/try_vision.py tests/fixtures/real` from `parser/`.
 
-# terminal 2 - parser/, venv active
-uvicorn app.main:app --reload --port 8001
-```
+> [!NOTE]
+> On Windows, stop `npm run dev` before `npm run build`, or Windows may refuse to overwrite a file the running server has open.
+</details>
 
-Open **http://localhost:5173** and press **Demo**.
+## 🚀 Deploy
 
-To try the camera on your phone, run `npm run dev -w client -- --host` and open the "Network" address it prints on your phone (same Wi-Fi).
+Live at **https://shelfsense-wine-kappa.vercel.app**: three Vercel projects from this one repo, plus a Neon database, all on free plans.
 
-### Checks
+<details>
+<summary><b>How to deploy your own copy</b></summary>
 
-```bash
-npm run typecheck                 # TypeScript in client, server and shared
-npm test                          # Vitest + Supertest (needs the test database)
-npm run build                     # production build of client + server
-cd parser && ruff check . && pytest
-```
-
-**Real label photos (optional, costs a few cents):** the tests use tiny generated images and a fake Gemini, so they never need real photos.
-To check real labels against the real model, put a few clear photos of ingredient lists in `parser/tests/fixtures/real/`
-(git-ignored, so they're never pushed; no photos with faces or hands), set `GEMINI_API_KEY`, and run
-`python scripts/try_vision.py tests/fixtures/real` from `parser/`.
-
-> **Windows:** stop `npm run dev` before `npm run build`, or Windows may refuse to overwrite a file the running server has open.
-
----
-
-## Deploy (Vercel + Neon)
-
-Three Vercel projects from this one repo. Each is **Add New → Project → import the repo → set Root Directory**:
-
-| Project name (suggested) | Root Directory | Framework (auto-detected) | Environment variables |
+| Vercel project | Root Directory | Detected as | Environment variables |
 | --- | --- | --- | --- |
 | `shelfsense-parser` | `parser` | FastAPI | `PARSER_TOKEN`, `GEMINI_API_KEY`, `GEMINI_MODEL` |
-| `shelfsense-api` | `server` | Express | `DATABASE_URL`, `PARSER_URL`, `PARSER_TOKEN`, `GEMINI_API_KEY`, `GEMINI_MODEL` |
-| `shelfsense` | `client` | Vite | — |
+| `shelfsense-server` | `server` | Express | `DATABASE_URL`, `PARSER_URL`, `PARSER_TOKEN`, `GEMINI_API_KEY`, `GEMINI_MODEL` |
+| `shelfsense` | `client` | Vite | none |
 
-1. **Database:** create the Neon project in **AWS Asia Pacific (Singapore)** — the functions run in Vercel's Singapore region (`sin1`, set in `server/vercel.json` and `parser/vercel.json`), and the server and database should sit next to each other. Use the **production** branch for the live site. From your machine, create the tables and load the data with its **direct** connection string:
+1. **Database:** create a Neon project in **AWS Asia Pacific (Singapore)**, next to where the functions run (`sin1`, set in `server/vercel.json` and `parser/vercel.json`). With its **direct** connection string, create the tables and load the data:
    ```bash
-   DATABASE_URL="<neon direct url>" npm run db:deploy
-   cd parser && DATABASE_URL="<neon direct url>" python scripts/seed.py
+   DATABASE_URL="<direct url>" npm run db:deploy
+   cd parser && DATABASE_URL="<direct url>" python scripts/seed.py
    ```
-   (Windows PowerShell: set `$env:DATABASE_URL="..."` first, then run the commands.)
-2. **Parser first:** create `shelfsense-parser` and deploy it. Copy its URL.
-3. **API:** create `shelfsense-api`. Set `DATABASE_URL` to Neon's **pooled** connection string (production branch, pooling ON), `PARSER_URL` to the parser's URL, the same `PARSER_TOKEN` as the parser, and your Gemini key. Copy its URL.
-4. **Client:** in `client/vercel.json`, replace `REPLACE-WITH-YOUR-API-PROJECT.vercel.app` with the API's address, commit, push, then create the `shelfsense` project.
-5. Open the `shelfsense` URL → **Demo**. Every push to `main` redeploys whatever changed.
+2. **Parser:** in Vercel, **Add New → Project** → this repo → Root Directory `parser` → add its variables → **Deploy**. Copy its URL.
+3. **Server:** same, with Root Directory `server`. Use Neon's **pooled** connection string for `DATABASE_URL`, the parser's URL for `PARSER_URL`, and the **same** `PARSER_TOKEN`. Copy its URL.
+4. **Website:** put *your* server's URL into `client/vercel.json`, push, then create the project with Root Directory `client`.
+5. Open the website and press **Demo**. Every push to `main` redeploys whatever changed.
 
-**Limits worth knowing (free Hobby plan):** request bodies max 4.5 MB (so photos are capped at 4 MB), functions run up to 300 s, and rate limits are counted per running copy of the function (fine for a portfolio; a shared store like Upstash Redis would make them exact).
+**Free-plan limits I designed around:** requests up to 4.5 MB (so photos are capped at 4 MB), one function region, and rate limits counted per running copy of a function.
+</details>
+
+## 🧠 Design decisions
+
+1. **Python for the label pipeline, Node for the app.** Python has the best image and fuzzy-matching libraries; Node shares TypeScript types with the React app. They talk over one small HTTP contract.
+2. **The AI reads, my code decides.** Gemini only copies text from photos. My own parser does the matching, so it's testable and gives the same answer every time.
+3. **A vision model instead of classic OCR.** OCR struggles with curved, shiny, tiny-print bottles. Photos are shrunk first to keep it cheap, and the review step catches mistakes.
+4. **Rules live in the database, not in code.** A new rule is a data change, not a redeploy.
+5. **One SQL query per check.** A self-join over a CTE is clearer and faster than nested loops in TypeScript.
+6. **Label position, not percentages.** Ingredients are listed from most to least, so position is the honest signal. The app never guesses a percentage.
+7. **A careful coach.** It only writes up what the SQL found. Its answer must pass a type guard and name only real shelf products (one retry, then a clean error). Answers are cached by a hash of the inputs, and it falls back to other Gemini models when one is rate-limited.
+8. **Sessions in Postgres with httpOnly cookies, not tokens in localStorage.** Page scripts can't read the cookie, sessions can be ended instantly, and only a hash of each token is stored.
+9. **Hand-written validation.** Every rule is a few visible lines. In a bigger app I'd use a schema library.
+10. **Photos are never stored.** Less privacy risk, nothing to leak.
+11. **Vercel, in Singapore.** Free, no slow wake-up after idle, deploys on every push, and close to users in India. Prisma runs without a native engine, so nothing gets lost when bundling.
+
+## 🔒 Security
+
+- Passwords hashed with bcrypt (cost 12). Login gives the same error, and takes the same time, for a wrong email or a wrong password.
+- Sessions are 32 random bytes; the database stores only their sha256.
+- Cookies are `HttpOnly`, `SameSite=Lax` and `Secure`.
+- Rate limits on login and signup, the demo button, label reading and the coach.
+- Every query is limited to the logged-in user. Deleting is a single `DELETE … WHERE id = ? AND user_id = ?`.
+- The demo account is read-only on the server, not just greyed out in the UI.
+- All SQL uses Prisma or parameterised `$queryRaw`, so user input is never pasted into SQL.
+- The parser only answers requests carrying a secret token, compared in constant time.
+
+## 🗺️ What's next
+
+- "Why is this a clash?" pop-ups that show the exact rule.
+- A side-by-side view of where a doubled ingredient sits on each label.
+- Password reset by email.
+- A bigger ingredient dictionary and an admin page for editing rules.
 
 ---
 
-## Design decisions
-
-1. **Python for scanning and matching, Node for the app.** Python has the best image and fuzzy-matching libraries; Node + Express serves the API with shared TypeScript types. They talk over one small HTTP contract.
-2. **The LLM reads, our code decides.** Gemini only copies text off the photo. Matching is our own deterministic parser, so it's testable and gives the same answer every time.
-3. **Why a vision model instead of Tesseract.** Classic OCR struggles with curved, shiny, tiny-print bottle labels. We shrink the image first to keep the cost low, and the review screen catches mistakes.
-4. **Rules live in the database, not in code.** Adding a rule is a data change, not a redeploy.
-5. **One raw SQL query for conflicts.** A self-join over a CTE is clearer and faster than nested loops in TypeScript.
-6. **Label position, not percentages.** Labels list ingredients from most to least (below ~1% the order is free), so position is the honest signal. We never guess a percentage.
-7. **A grounded, guarded, cached coach (Gemini, with model fallback).** It only rewrites findings our SQL produced. The reply is checked by a type guard, every product name must exist on the shelf (one retry, then a clean error), and results are cached by a sha256 of the inputs. If a model is rate limited it tries the next one in `GEMINI_MODEL`; with no API key it falls back to a rule-based builder.
-8. **Sessions in Postgres + httpOnly cookies, not JWTs in localStorage.** Page JavaScript can't read the cookie, sessions can be revoked instantly, and only a hash of each token is stored.
-9. **Hand-written validation instead of a library.** Every rule is a few visible lines. In a bigger app I'd move to a schema library to cut the repetition.
-10. **Photos are never stored.** Less privacy risk, no storage bucket to manage, nothing to leak.
-11. **Vercel instead of an always-on server.** Free, no 30–60 s cold start like sleeping free servers, auto-deploys from GitHub. Prisma runs engine-free (the `pg` driver adapter), so there's no native binary to bundle into a serverless function.
-
-## Security notes
-
-- bcrypt (cost 12) for passwords; login gives the same error and takes the same time for "no such email" and "wrong password".
-- Session tokens are 32 random bytes; the database stores only their sha256.
-- Cookies are `httpOnly`, `SameSite=Lax`, and `Secure` in production.
-- Rate limits on login/signup, the demo button, parsing and the coach.
-- Every product query filters by the logged-in user; delete is a single `DELETE … WHERE id = ? AND user_id = ?`.
-- The demo account is read-only on the server (`blockDemo`), not just greyed out in the UI.
-- All SQL uses Prisma or `$queryRaw` tagged templates — user input is always a bound parameter.
-- The parser only answers requests carrying the secret `X-Parser-Token`, compared in constant time.
-
-## What I'd build next
-
-- "Why is this a conflict?" pop-ups showing the exact rule row.
-- A doubles detail view comparing where the ingredient sits on each label.
-- Password reset by email.
-- A larger ingredient dictionary and an admin screen for editing rules.
-- Exact rate limits across serverless copies with a shared Redis store.
+<div align="center">
+<sub>Built by <a href="https://github.com/Sangupta03">@Sangupta03</a> · Not medical advice. Every finding comes from a documented rule.</sub>
+</div>
