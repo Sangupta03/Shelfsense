@@ -27,10 +27,12 @@ async function requireLogin({ context }: { context: RouterContext }) {
   if (!user) throw redirect({ to: "/login" });
 }
 
-// the opposite: no point showing the login form to someone who's logged in
+// the opposite: no point showing the login form to someone who's logged in.
+// Demo visitors are let through - "sign up" in the demo banner has to open the form.
+// Signing up (or logging in) just replaces their demo session cookie with a real one.
 async function redirectIfLoggedIn({ context }: { context: RouterContext }) {
   const user = await context.queryClient.ensureQueryData(meQuery);
-  if (user) throw redirect({ to: "/shelf" });
+  if (user && !user.isDemo) throw redirect({ to: "/shelf" });
 }
 
 const landingRoute = createRoute({ getParentRoute: () => rootRoute, path: "/", component: LandingPage });
