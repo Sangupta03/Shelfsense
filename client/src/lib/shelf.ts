@@ -8,7 +8,7 @@ import type {
   ProductsResponse,
   ReportResponse,
 } from "@shelfsense/shared";
-import { api } from "./api";
+import { ApiError, api } from "./api";
 
 // All the server data for a logged-in user: queries to read it, mutations to change it.
 
@@ -53,9 +53,47 @@ export function parseText(text: string): Promise<ParseResult> {
   return api<ParseResult, ParseTextInput>("POST", "/parse/text", { text });
 }
 
-export function parseImage(file: File): Promise<ParseResult> {
+const MAX_UPLOAD_BYTES = 4 * 1024 * 1024; // the server's limit (Vercel caps requests at 4.5 MB)
+const MAX_SIDE = 1568; // Gemini doesn't read labels any better above this, so don't send more
+
+/**
+ * Phone photos are often 3-12 MB. Shrinking them here, before uploading, keeps them far
+ * under the limit (usually ~300 KB) and makes the upload fast on mobile data.
+ * `imageOrientation: "from-image"` applies the phone's rotation tag while drawing.
+ */
+async function shrinkPhoto(file: File): Promise<Blob> {
+  try {
+    const bitmap = await createImageBitmap(file, { imageOrientation: "from-image" });
+    const scale = Math.min(1, MAX_SIDE / Math.max(bitmap.width, bitmap.height));
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.round(bitmap.width * scale);
+    canvas.height = Math.round(bitmap.height * scale);
+    const context = canvas.getContext("2d");
+    if (!context) return file;
+    context.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+    bitmap.close();
+    const shrunk = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.85));
+    return shrunk ?? file;
+  } catch {
+    return file; // a format this browser can't decode - send it as it is
+  }
+}
+
+function megabytes(bytes: number): string {
+  return (bytes / (1024 * 1024)).toFixed(1);
+}
+
+export async function parseImage(file: File): Promise<ParseResult> {
+  const photo = await shrinkPhoto(file);
+  if (photo.size > MAX_UPLOAD_BYTES) {
+    // say it clearly BEFORE uploading, instead of a vague error from the server
+    throw new ApiError(
+      413,
+      `This photo is ${megabytes(photo.size)} MB and the limit is 4 MB. Try a JPG or PNG, a closer photo, or a screenshot of the label.`,
+    );
+  }
   const form = new FormData();
-  form.append("image", file);
+  form.append("image", photo, "label.jpg");
   return api<ParseResult, FormData>("POST", "/parse/image", form);
 }
 

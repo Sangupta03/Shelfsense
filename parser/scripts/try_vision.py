@@ -12,7 +12,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from app.image import ImageError, prepare_image  # noqa: E402
 from app.main import build_result  # noqa: E402
-from app.vision import read_label  # noqa: E402
+from app.vision import VisionError, read_label  # noqa: E402
 
 PHOTO_TYPES = {".jpg", ".jpeg", ".png", ".webp"}
 
@@ -27,7 +27,7 @@ def main() -> None:
         print(f"\n=== {photo.name} ===")
         try:
             text = read_label(prepare_image(photo.read_bytes()))
-        except ImageError as err:
+        except (ImageError, VisionError) as err:  # bad file, or Gemini busy/failing - report and move on
             print(f"  skipped: {err}")
             continue
         if not text:

@@ -7,7 +7,8 @@ import { isParseResult, isRecord } from "../validators/validate.js";
 // directly: it only trusts requests that carry our secret X-Parser-Token.
 
 const TEXT_TIMEOUT_MS = 5_000;
-const IMAGE_TIMEOUT_MS = 30_000; // the vision call can take a while
+// The parser gives Gemini ~15 s in total (plus one slow last call), so 25 s is plenty.
+const IMAGE_TIMEOUT_MS = 25_000;
 
 function parserUrl(path: string): string {
   return readEnv("PARSER_URL", "http://localhost:8001") + path;
@@ -39,7 +40,7 @@ async function callParser(path: string, init: RequestInit, timeoutMs: number): P
     const detail = readDetail(data);
     if (res.status === 503) throw new HttpError(503, detail ?? "The label reader isn't available right now.");
     if (res.status < 500) throw new HttpError(422, detail ?? "Couldn't read that input.");
-    throw new HttpError(502, "The label reader had a problem. Please try again.");
+    throw new HttpError(502, detail ?? "The label reader had a problem. Please try again.");
   }
 
   if (!isParseResult(data)) throw new HttpError(502, "The label reader sent back something unexpected.");

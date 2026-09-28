@@ -53,3 +53,9 @@ def test_a_whole_real_label():
     assert len(items) == 11
     assert items[0] == "aqua/water/eau"
     assert items[-1] == "chlorphenesin"
+
+
+def test_blends_written_with_and_are_split():
+    # real labels write trade-name blends as "X (and) Y" - that's two ingredients
+    text = "Aqua, Phenoxyethanol (and) Ethylhexylglycerin, Aqua (Water)"
+    assert split_ingredients(text) == ["aqua", "phenoxyethanol", "ethylhexylglycerin", "aqua (water)"]

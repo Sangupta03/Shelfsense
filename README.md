@@ -51,9 +51,10 @@ Every finding comes from a written rule, and the app never invents scores or per
 
 - **Full stack in three languages:** React + TypeScript website, Express + TypeScript API, Python label parser, one Postgres database.
 - **SQL does the thinking:** clashes, doubles and gaps are three hand-written SQL queries (a self-join, `GROUP BY … HAVING`, `NOT EXISTS`) over rules stored in the database.
-- **AI used carefully:** Gemini only *copies* text from photos and *writes up* findings. Its answers are type-checked, every product it names must really be on your shelf, answers are cached, and if one model is rate-limited it switches to the next.
+- **AI used carefully:** Gemini only *copies* text from photos and *writes up* findings. Its answers are type-checked, every product it names must really be on your shelf, answers are cached, and if one model is busy or rate-limited it switches to the next. It runs on Gemini's **free tier**; when every model is busy, the user gets a clear message within ~15 s and can paste the text instead.
+- **Photo-friendly:** phone photos are shrunk in the browser before upload (usually to ~300 KB), and anything still over 4 MB gets a clear size message.
 - **Secure by default:** bcrypt passwords, hashed session tokens in httpOnly cookies, rate limits, ownership checks on every query, and photos that are never stored.
-- **80 automated tests** (33 server, 47 parser) run by GitHub Actions on every push.
+- **89 automated tests** (34 server, 55 parser) run by GitHub Actions on every push.
 - **Deployed for free on Vercel + Neon in Singapore**, close to its users, with light and dark themes and a phone-friendly layout.
 
 ## 📸 Screenshots
@@ -232,7 +233,7 @@ cd parser && python scripts/seed.py --env-file ../server/.env.test
 
 **Phone camera:** run `npm run dev -w client -- --host` and open the "Network" address on your phone (same Wi-Fi).
 
-**Real label photos (optional, costs a few cents):** the tests never need real photos. To try real labels against Gemini, put a few photos of ingredient lists in `parser/tests/fixtures/real/` (git-ignored, never pushed), set `GEMINI_API_KEY`, and run `python scripts/try_vision.py tests/fixtures/real` from `parser/`.
+**Real label photos (optional, free tier):** the tests never need real photos. To try real labels against Gemini, put a few photos of ingredient lists in `parser/tests/fixtures/real/` (git-ignored, never pushed), set `GEMINI_API_KEY`, and run `python scripts/try_vision.py tests/fixtures/real` from `parser/`.
 
 > [!NOTE]
 > On Windows, stop `npm run dev` before `npm run build`, or Windows may refuse to overwrite a file the running server has open.

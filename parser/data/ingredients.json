@@ -69,5 +69,18 @@
 
   { "inci": "PARFUM", "aliases": ["fragrance", "perfume", "aroma"], "description": "Added scent. A common trigger for sensitive skin.", "classes": ["fragrance"] },
   { "inci": "LIMONENE", "aliases": ["d-limonene"], "description": "Citrus scent molecule. Can irritate once oxidised.", "classes": ["fragrance"] },
-  { "inci": "LINALOOL", "aliases": [], "description": "Floral scent molecule. Can irritate once oxidised.", "classes": ["fragrance"] }
+  { "inci": "LINALOOL", "aliases": [], "description": "Floral scent molecule. Can irritate once oxidised.", "classes": ["fragrance"] },
+
+  {"inci": "PROPYLENE GLYCOL", "aliases": [], "description": "Humectant and solvent that helps other ingredients spread.", "classes": ["humectant"]},
+  {"inci": "TOCOPHERYL ACETATE", "aliases": ["vitamin e acetate"], "description": "Stable form of vitamin E; antioxidant.", "classes": []},
+  {"inci": "BETAINE", "aliases": ["trimethylglycine"], "description": "Gentle moisturiser from sugar beet.", "classes": ["humectant"]},
+  {"inci": "GLYCERYL GLUCOSIDE", "aliases": [], "description": "Hydrating sugar-based ingredient.", "classes": ["humectant"]},
+  {"inci": "HYDROXYPROPYL METHYLCELLULOSE", "aliases": ["hpmc", "hypromellose"], "description": "Plant-based thickener.", "classes": []},
+  {"inci": "PEG-40 HYDROGENATED CASTOR OIL", "aliases": ["peg 40 hydrogenated castor oil"], "description": "Helps oils and fragrance mix into water.", "classes": []},
+  {"inci": "CHONDRUS CRISPUS EXTRACT", "aliases": ["chondrus crispus", "irish moss extract"], "description": "Seaweed extract that hydrates and soothes.", "classes": []},
+  {"inci": "BISABOLOL", "aliases": ["a-bisabolol", "alpha-bisabolol"], "description": "Calming ingredient from chamomile.", "classes": []},
+  {"inci": "IODOPROPYNYL BUTYLCARBAMATE", "aliases": ["ipbc"], "description": "Preservative used in small amounts.", "classes": []},
+  {"inci": "SODIUM BENZOATE", "aliases": [], "description": "Common preservative.", "classes": []},
+  {"inci": "POTASSIUM SORBATE", "aliases": [], "description": "Common preservative.", "classes": []},
+  {"inci": "CAPRYLYL GLYCOL", "aliases": [], "description": "Moisturising ingredient that also boosts preservatives.", "classes": []}
 ]

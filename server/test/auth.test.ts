@@ -4,7 +4,7 @@ import { afterAll, describe, expect, it } from "vitest";
 import { createApp } from "../src/app.js";
 import { prisma } from "../src/lib/db.js";
 import { SESSION_COOKIE } from "../src/services/sessions.js";
-import { cleanupTestUsers, cookieFor, makeUser, testEmail } from "./helpers.js";
+import { cleanupTestUsers, cookieFor, makeProduct, makeUser, testEmail } from "./helpers.js";
 
 const app = createApp();
 const PASSWORD = "correct horse battery";
@@ -119,6 +119,23 @@ describe("auth", () => {
       .set("Cookie", await cookieFor(demo.id))
       .send({ brand: "x", name: "y", type: "SERUM", slot: "AM", inputMethod: "PASTE", ingredients: [] });
     expect(res.status).toBe(403);
+  });
+
+  it("never lets one user delete or see another user's product", async () => {
+    const owner = await makeUser("owner");
+    const stranger = await makeUser("stranger");
+    const product = await makeProduct(owner.id, { name: "Mine", type: "SERUM", slot: "PM", inci: ["RETINOL"] });
+
+    const del = await request(app)
+      .delete(`/api/products/${product.id}`)
+      .set("Cookie", await cookieFor(stranger.id));
+    expect(del.status).toBe(404); // not "forbidden" - a stranger doesn't even learn it exists
+
+    const strangerShelf = await request(app).get("/api/products").set("Cookie", await cookieFor(stranger.id));
+    expect(strangerShelf.body.products).toHaveLength(0);
+
+    const ownerShelf = await request(app).get("/api/products").set("Cookie", await cookieFor(owner.id));
+    expect(ownerShelf.body.products).toHaveLength(1); // still there
   });
 
   it("answers 401 to private routes without a cookie", async () => {

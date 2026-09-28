@@ -21,10 +21,18 @@ function isRecord(x: unknown): x is Record<string, unknown> {
   return typeof x === "object" && x !== null && !Array.isArray(x);
 }
 
-function toApiError(status: number, data: unknown): ApiError {
-  if (!isRecord(data)) return new ApiError(status, "Something went wrong. Please try again.");
+// Used when the reply isn't our JSON - e.g. Vercel itself rejecting a request that's
+// too big before it ever reaches our server. Better than a vague "something went wrong".
+function fallbackMessage(status: number): string {
+  if (status === 413) return "That photo is too large. The limit is 4 MB — try a closer photo or a screenshot.";
+  if (status >= 502 && status <= 504) return "The server is busy right now. Please try again in a moment.";
+  return "Something went wrong. Please try again.";
+}
 
-  const message = typeof data.error === "string" ? data.error : "Something went wrong. Please try again.";
+function toApiError(status: number, data: unknown): ApiError {
+  if (!isRecord(data)) return new ApiError(status, fallbackMessage(status));
+
+  const message = typeof data.error === "string" ? data.error : fallbackMessage(status);
   const fields: FieldErrors = {};
   if (isRecord(data.fields)) {
     for (const [key, value] of Object.entries(data.fields)) {

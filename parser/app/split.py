@@ -9,7 +9,7 @@ import re
 import unicodedata
 
 # everything that separates ingredients besides a comma
-_SEPARATORS = re.compile(r"[•·●▪|;\n\r\t]")
+_SEPARATORS = re.compile(r"[•·●▪|;\n\r\t]|\(and\)")  # "(and)" joins the two ingredients of a blend
 
 # label words that aren't ingredients
 _NOISE = [

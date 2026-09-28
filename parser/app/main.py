@@ -17,7 +17,7 @@ from app.image import MAX_BYTES, ImageError, prepare_image
 from app.match import get_matcher
 from app.models import ParsedItem, ParseResult, ParseTextRequest
 from app.split import split_ingredients
-from app.vision import VisionError, VisionUnavailable, read_label
+from app.vision import VisionBusy, VisionError, VisionUnavailable, read_label
 
 app = FastAPI(title="ShelfSense parser", version="1.0.0")
 
@@ -73,7 +73,7 @@ def parse_image(image: Annotated[UploadFile, File()]) -> ParseResult:
 
     try:
         text = read_label(jpeg)
-    except VisionUnavailable as err:
+    except (VisionUnavailable, VisionBusy) as err:  # "not now" - the user can try again later
         raise HTTPException(status_code=503, detail=str(err)) from err
     except VisionError as err:
         raise HTTPException(status_code=502, detail=str(err)) from err

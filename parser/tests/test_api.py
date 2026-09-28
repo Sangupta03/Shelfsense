@@ -7,7 +7,7 @@ from fastapi.testclient import TestClient
 from PIL import Image
 
 import app.main as main
-from app.vision import VisionUnavailable
+from app.vision import VisionBusy, VisionUnavailable
 
 TOKEN = "test-token"
 
@@ -88,3 +88,13 @@ def test_vision_switched_off_gives_503(client, monkeypatch):
 def test_non_image_upload_is_rejected(client):
     res = upload_photo(client, b"hello", "x.txt", "text/plain")
     assert res.status_code == 422
+
+
+def test_busy_gemini_gives_503_so_the_user_can_retry(client, monkeypatch):
+    def busy(jpeg):
+        raise VisionBusy("The label reader is busy right now.")
+
+    monkeypatch.setattr(main, "read_label", busy)
+    res = upload_photo(client)
+    assert res.status_code == 503
+    assert "busy" in res.json()["detail"]

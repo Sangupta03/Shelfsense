@@ -8,9 +8,9 @@ import { readEnv } from "./env.js";
 // and this is Google's named replacement for it.) Change it with GEMINI_MODEL.
 export const DEFAULT_MODEL = "gemini-3.1-flash-lite";
 
-// 429 = rate limited, 503 = overloaded. Free-tier limits are per model, so on
-// either one it's worth trying the next model in the list instead of giving up.
-const TRY_NEXT_MODEL = new Set([429, 503]);
+// Problems another model can fix: not found/retired (404), rate limited (429), server error (500),
+// overloaded (503), timed out (504). Free-tier limits are per model, so try the next one.
+const TRY_NEXT_MODEL = new Set([404, 429, 500, 503, 504]);
 
 /** GEMINI_MODEL can be one model or a fallback list: "model-a,model-b,model-c". */
 export function coachModels(): string[] {

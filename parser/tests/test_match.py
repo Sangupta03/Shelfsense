@@ -76,3 +76,10 @@ def test_shared_word_only_gives_a_check_not_a_match(matcher):
     # That's why anything under 92 goes to the review screen instead of being trusted.
     found = matcher.match("tamarindus indica seed gum")
     assert found.status != "matched"
+
+
+def test_real_label_names_match_exactly(matcher):
+    # names from real product photos that used to get a wrong fuzzy suggestion
+    assert matcher.match("propylene glycol").inci == "PROPYLENE GLYCOL"  # not pentylene glycol
+    assert matcher.match("betaine").inci == "BETAINE"  # not cocamidopropyl betaine
+    assert matcher.match("a-bisabolol").inci == "BISABOLOL"

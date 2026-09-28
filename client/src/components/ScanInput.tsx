@@ -121,7 +121,7 @@ export function ScanInput({ onParsed }: ScanInputProps) {
                 <span className="mt-1 text-xs text-muted">
                   {tab === "SCAN"
                     ? "On a phone this opens the back camera. Get close and keep the text flat."
-                    : "JPG or PNG, up to 4 MB. Photos are read in memory and never stored."}
+                    : "Any phone photo works - it is shrunk before uploading. Photos are read in memory and never stored."}
                 </span>
               </label>
             )}
