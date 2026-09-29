@@ -39,6 +39,11 @@ def gemini_key() -> str:
     return os.environ.get("GEMINI_API_KEY", "")
 
 
+def ocr_space_key() -> str:
+    """Optional backup photo reader. Empty = switched off."""
+    return os.environ.get("OCR_SPACE_API_KEY", "")
+
+
 def gemini_models() -> list[str]:
     """GEMINI_MODEL can be one model or a fallback list: "model-a,model-b,model-c"."""
     raw = os.environ.get("GEMINI_MODEL") or DEFAULT_MODEL

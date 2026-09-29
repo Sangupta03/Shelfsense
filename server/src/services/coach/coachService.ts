@@ -34,7 +34,8 @@ function hashInput(input: unknown, model: string): string {
   return createHash("sha256").update(JSON.stringify({ input, model })).digest("hex");
 }
 
-async function askModelForRoutine(input: unknown, shelfNames: string[]): Promise<CoachOutput> {
+/** null = the model couldn't be reached. */
+async function askModelForRoutine(input: unknown, shelfNames: string[]): Promise<CoachOutput | null> {
   let lastProblem = "";
 
   for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
@@ -43,9 +44,8 @@ async function askModelForRoutine(input: unknown, shelfNames: string[]): Promise
     try {
       reply = await askModel(COACH_SYSTEM_PROMPT, JSON.stringify(input) + reminder);
     } catch (err) {
-      // every model busy, bad key, network down... log it, but give the user a calm message
-      console.error("[coach] model call failed", err instanceof Error ? err.message : err);
-      throw new HttpError(503, "The coach is busy right now. Please try again in a minute.");
+      console.error("[coach] model call failed, using the rules", err instanceof Error ? err.message : err);
+      return null;
     }
 
     const parsed = parseJsonLoose(reply);
@@ -90,6 +90,12 @@ export async function getCoach(userId: string, products: Product[]): Promise<Coa
   const coach = useLlm
     ? await askModelForRoutine(input, products.map(displayName))
     : buildRuleRoutine(products, report);
+
+  if (!coach) {
+    // Gemini is busy: answer with our rules, but don't cache it, so the next click tries the AI again
+    const fallback = buildRuleRoutine(products, report);
+    return { coach: fallback, cached: false, source: "rules", createdAt: new Date().toISOString() };
+  }
 
   // upsert, not create: two clicks at the same time shouldn't crash on the unique key
   const saved = await prisma.coachRun.upsert({

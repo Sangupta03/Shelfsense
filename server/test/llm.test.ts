@@ -57,6 +57,17 @@ describe("askModel fallback", () => {
     expect(generateContent).toHaveBeenCalledTimes(3);
   });
 
+  it("stops starting new models once the 15 s budget is used up", async () => {
+    const clock = vi.spyOn(Date, "now").mockReturnValue(0);
+    generateContent.mockImplementation(async () => {
+      clock.mockReturnValue(16_000); // pretend this call took 16 s before answering "busy"
+      throw rateLimited();
+    });
+    await expect(askModel("sys", "hi")).rejects.toBeInstanceOf(ApiError);
+    expect(generateContent).toHaveBeenCalledTimes(1); // model-b and model-c were never started
+    clock.mockRestore();
+  });
+
   it("does not switch models for errors another model won't fix", async () => {
     generateContent.mockRejectedValueOnce(new ApiError({ message: "bad key", status: 403 }));
     await expect(askModel("sys", "hi")).rejects.toThrow("bad key");

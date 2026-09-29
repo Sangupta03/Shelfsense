@@ -7,8 +7,8 @@ import { isParseResult, isRecord } from "../validators/validate.js";
 // directly: it only trusts requests that carry our secret X-Parser-Token.
 
 const TEXT_TIMEOUT_MS = 5_000;
-// The parser gives Gemini ~15 s in total (plus one slow last call), so 25 s is plenty.
-const IMAGE_TIMEOUT_MS = 25_000;
+// Parser worst case: 15 s of Gemini + one slow 12 s call + 8 s of OCR = 35 s.
+const IMAGE_TIMEOUT_MS = 38_000;
 
 function parserUrl(path: string): string {
   return readEnv("PARSER_URL", "http://localhost:8001") + path;

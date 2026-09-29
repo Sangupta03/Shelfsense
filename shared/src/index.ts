@@ -208,7 +208,7 @@ export type CoachOutput = {
   tips: string[];
 };
 
-/** "llm" = written by the model, "rules" = built by our own code (no API key set) */
+/** "llm" = written by the model, "rules" = built by our own code (no API key set, or every model busy) */
 export type CoachSource = "llm" | "rules";
 
 export interface CoachResponse {

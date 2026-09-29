@@ -12,6 +12,10 @@ export const DEFAULT_MODEL = "gemini-3.1-flash-lite";
 // overloaded (503), timed out (504). Free-tier limits are per model, so try the next one.
 const TRY_NEXT_MODEL = new Set([404, 429, 500, 503, 504]);
 
+// Each call gets 20 s at most, and no new model starts after 15 s (worst case ~35 s).
+const CALL_TIMEOUT_MS = 20_000;
+const TOTAL_BUDGET_MS = 15_000;
+
 /** GEMINI_MODEL can be one model or a fallback list: "model-a,model-b,model-c". */
 export function coachModels(): string[] {
   const list = readEnv("GEMINI_MODEL", DEFAULT_MODEL)
@@ -42,7 +46,7 @@ Reply with JSON only, no markdown, in exactly this shape:
 let client: GoogleGenAI | null = null;
 
 function getClient(): GoogleGenAI {
-  client ??= new GoogleGenAI({ apiKey: readEnv("GEMINI_API_KEY"), httpOptions: { timeout: 30_000 } });
+  client ??= new GoogleGenAI({ apiKey: readEnv("GEMINI_API_KEY"), httpOptions: { timeout: CALL_TIMEOUT_MS } });
   return client;
 }
 
@@ -66,9 +70,11 @@ async function callModel(model: string, system: string, userMessage: string): Pr
  */
 export async function askModel(system: string, userMessage: string): Promise<string> {
   const models = coachModels();
+  const started = Date.now();
   let lastError: unknown = null;
 
   for (const model of models) {
+    if (Date.now() - started > TOTAL_BUDGET_MS) break; // out of time
     try {
       return await callModel(model, system, userMessage);
     } catch (err) {
@@ -78,5 +84,5 @@ export async function askModel(system: string, userMessage: string): Promise<str
       lastError = err;
     }
   }
-  throw lastError; // every model in the list was busy
+  throw lastError; // every model we tried was busy
 }

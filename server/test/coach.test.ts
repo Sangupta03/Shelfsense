@@ -96,14 +96,19 @@ describe("POST /api/coach", () => {
     }
   });
 
-  it("gives a calm 503 when every model is busy", async () => {
+  it("falls back to the rules when every model is busy, without caching that answer", async () => {
     const cookie = await shelfWithClash("coach-busy");
     vi.spyOn(console, "error").mockImplementation(() => {}); // expected error, keep output clean
-    fakeAsk.mockRejectedValue(new Error("all models rate limited"));
+    fakeAsk.mockRejectedValueOnce(new Error("all models busy"));
 
-    const res = await request(app).post("/api/coach").set("Cookie", cookie);
-    expect(res.status).toBe(503);
-    expect(res.body.error).toContain("busy");
+    const busy = await request(app).post("/api/coach").set("Cookie", cookie);
+    expect(busy.status).toBe(200);
+    expect(busy.body).toMatchObject({ source: "rules", cached: false });
+
+    // once Gemini is back, the next click gets a real AI answer (the rules one wasn't cached)
+    fakeAsk.mockResolvedValueOnce(routine([RETINOL, GLYCOLIC]));
+    const later = await request(app).post("/api/coach").set("Cookie", cookie);
+    expect(later.body).toMatchObject({ source: "llm", cached: false });
   });
 
   it("needs at least one product", async () => {

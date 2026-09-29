@@ -51,10 +51,10 @@ Every finding comes from a written rule, and the app never invents scores or per
 
 - **Full stack in three languages:** React + TypeScript website, Express + TypeScript API, Python label parser, one Postgres database.
 - **SQL does the thinking:** clashes, doubles and gaps are three hand-written SQL queries (a self-join, `GROUP BY … HAVING`, `NOT EXISTS`) over rules stored in the database.
-- **AI used carefully:** Gemini only *copies* text from photos and *writes up* findings. Its answers are type-checked, every product it names must really be on your shelf, answers are cached, and if one model is busy or rate-limited it switches to the next. It runs on Gemini's **free tier**; when every model is busy, the user gets a clear message within ~15 s and can paste the text instead.
+- **AI used carefully:** Gemini only *copies* text from photos and *writes up* findings. Its answers are type-checked, every product it names must really be on your shelf, answers are cached, and if one model is busy or rate-limited it switches to the next. It runs on Gemini's **free tier**, with free backups when every model is busy: photos fall back to OCR.space, the coach to its own rule-based routine, and pasting text never needs AI at all.
 - **Photo-friendly:** phone photos are shrunk in the browser before upload (usually to ~300 KB), and anything still over 4 MB gets a clear size message.
 - **Secure by default:** bcrypt passwords, hashed session tokens in httpOnly cookies, rate limits, ownership checks on every query, and photos that are never stored.
-- **89 automated tests** (34 server, 55 parser) run by GitHub Actions on every push.
+- **100 automated tests** (35 server, 65 parser) run by GitHub Actions on every push.
 - **Deployed for free on Vercel + Neon in Singapore**, close to its users, with light and dark themes and a phone-friendly layout.
 
 ## 📸 Screenshots
@@ -196,6 +196,7 @@ cp parser/.env.example parser/.env
 - `DATABASE_URL`: your database in `server/.env`, and a **separate** one in `server/.env.test` (the tests add and delete rows).
 - `PARSER_TOKEN`: the same random value in `server/.env` and `parser/.env`. Make one with `node -e "console.log(require('crypto').randomBytes(24).toString('hex'))"`.
 - `GEMINI_API_KEY`: *optional*, free at [Google AI Studio](https://aistudio.google.com/apikey). Without it everything works except reading photos, and the coach uses its built-in rules.
+- `OCR_SPACE_API_KEY` (parser): *optional* backup photo reader, used only when every Gemini model is busy. Free, email only, at [OCR.space](https://ocr.space/ocrapi/freekey).
 
 **3. Database**
 ```bash
@@ -248,7 +249,7 @@ Live at **https://shelfsense-wine-kappa.vercel.app**: three Vercel projects from
 
 | Vercel project | Root Directory | Detected as | Environment variables |
 | --- | --- | --- | --- |
-| `shelfsense-parser` | `parser` | FastAPI | `PARSER_TOKEN`, `GEMINI_API_KEY`, `GEMINI_MODEL` |
+| `shelfsense-parser` | `parser` | FastAPI | `PARSER_TOKEN`, `GEMINI_API_KEY`, `GEMINI_MODEL`, `OCR_SPACE_API_KEY` |
 | `shelfsense-server` | `server` | Express | `DATABASE_URL`, `PARSER_URL`, `PARSER_TOKEN`, `GEMINI_API_KEY`, `GEMINI_MODEL` |
 | `shelfsense` | `client` | Vite | none |
 
@@ -269,11 +270,11 @@ Live at **https://shelfsense-wine-kappa.vercel.app**: three Vercel projects from
 
 1. **Python for the label pipeline, Node for the app.** Python has the best image and fuzzy-matching libraries; Node shares TypeScript types with the React app. They talk over one small HTTP contract.
 2. **The AI reads, my code decides.** Gemini only copies text from photos. My own parser does the matching, so it's testable and gives the same answer every time.
-3. **A vision model instead of classic OCR.** OCR struggles with curved, shiny, tiny-print bottles. Photos are shrunk first to keep it cheap, and the review step catches mistakes.
+3. **A vision model instead of classic OCR.** OCR struggles with curved, shiny, tiny-print bottles, so plain OCR (OCR.space) is only the backup for when Gemini is busy. Photos are shrunk first to keep it cheap, and the review step catches mistakes.
 4. **Rules live in the database, not in code.** A new rule is a data change, not a redeploy.
 5. **One SQL query per check.** A self-join over a CTE is clearer and faster than nested loops in TypeScript.
 6. **Label position, not percentages.** Ingredients are listed from most to least, so position is the honest signal. The app never guesses a percentage.
-7. **A careful coach.** It only writes up what the SQL found. Its answer must pass a type guard and name only real shelf products (one retry, then a clean error). Answers are cached by a hash of the inputs, and it falls back to other Gemini models when one is rate-limited.
+7. **A careful coach.** It only writes up what the SQL found. Its answer must pass a type guard and name only real shelf products (one retry, then a clean error). Answers are cached by a hash of the inputs, it falls back to other Gemini models when one is rate-limited, and to a rule-based routine (not cached) when all of them are busy.
 8. **Sessions in Postgres with httpOnly cookies, not tokens in localStorage.** Page scripts can't read the cookie, sessions can be ended instantly, and only a hash of each token is stored.
 9. **Hand-written validation.** Every rule is a few visible lines. In a bigger app I'd use a schema library.
 10. **Photos are never stored.** Less privacy risk, nothing to leak.

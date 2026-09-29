@@ -15,6 +15,7 @@ TOKEN = "test-token"
 @pytest.fixture
 def client(monkeypatch):
     monkeypatch.setenv("PARSER_TOKEN", TOKEN)
+    monkeypatch.setenv("OCR_SPACE_API_KEY", "")  # never call the real backup reader from tests
     return TestClient(main.app)
 
 
@@ -98,3 +99,14 @@ def test_busy_gemini_gives_503_so_the_user_can_retry(client, monkeypatch):
     res = upload_photo(client)
     assert res.status_code == 503
     assert "busy" in res.json()["detail"]
+
+
+def test_busy_gemini_falls_back_to_the_ocr_reader(client, monkeypatch):
+    def busy(jpeg):
+        raise VisionBusy("The label reader is busy right now.")
+
+    monkeypatch.setattr(main, "read_label", busy)
+    monkeypatch.setattr(main, "read_label_with_ocr", lambda jpeg: "Aqua, Glycerin")
+    res = upload_photo(client)
+    assert res.status_code == 200
+    assert [i["inci"] for i in res.json()["items"]] == ["AQUA", "GLYCERIN"]
